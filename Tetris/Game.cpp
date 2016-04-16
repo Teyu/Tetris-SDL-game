@@ -1,7 +1,7 @@
 #include "Game.h"
 
 /****************************************************************************************************************************************************
-Konstruktor
+constructor
 */
 
 
@@ -11,41 +11,28 @@ CGame::CGame()
 }
 
 /****************************************************************************************************************************************************
-Initialisierung
+initialise
 */
 
 
 void CGame::Init()
 {
-	//Initialisiere Zeiger auf Spieler
-
-	//Initialisiere Zeiger auf Form
-	//m_pForm = new CForm;
-
-	//Erzeuge eine zufällige Form:
-	//Zufallsgenerator: WICHTIG, DIESER SOLLTE NUR EINMAL GENERIERT WERDEN,
-	//SONST WIRD IMMER DIE GLEICHE ZUFALLSZAHL ERZEUGT!!!!!!!!!!!!!!!!!
-
-	//TEST:
+	//seed random generator
 	time_t t;
 	srand( time(&t) );
 
 	m_Level = 0;
 	spawnForm();
 
-	//Initialisiere das Feld:
 	g_pField->Init(m_pForm->GetSize());
 
-	//Initialisiere zeiger auf das Feld
-
-	//Spiel läuft:
 	m_bGameRun = true;
 
 	m_bKeyLock_Move = false;
 }
 
 /****************************************************************************************************************************************************
-steuert die Instanzen, updatet und rendert sie
+control, update and render entities
 */
 
 
@@ -61,7 +48,7 @@ void CGame::Run()
 		//ProcessFallFaster
 		if (g_pFramework->KeyDown(SDLK_DOWN))
 		{
-			m_pForm->FastDown(true); //Autofire
+			m_pForm->FastDown(true); //autofire
 		}else
 		{
 			m_pForm->FastDown(false);
@@ -72,11 +59,11 @@ void CGame::Run()
 		{
 			m_pForm->Rotate();
 
-			m_bKeyLock_Rotate = true; //verhindere Autofire
+			m_bKeyLock_Rotate = true; //lock autofire
 		} 
 
 		//ProcessMove
-		if ((g_pFramework->KeyDown(SDLK_RIGHT)) && (m_bKeyLock_Move == true)) //Wird die Taste immer noch gedrückt? Aktiviere Autofire!
+		if ((g_pFramework->KeyDown(SDLK_RIGHT)) && (m_bKeyLock_Move == true)) //autofire
 		{
 			m_pForm->Move(SDLK_RIGHT, true);
 		} else if ((g_pFramework->KeyDown(SDLK_LEFT)) && (m_bKeyLock_Move == true))
@@ -86,18 +73,16 @@ void CGame::Run()
 
 		if (((g_pFramework->KeyDown(SDLK_RIGHT)) || (g_pFramework->KeyDown(SDLK_LEFT))) && (m_bKeyLock_Move == false))
 		{
-			/**/if (g_pFramework->KeyDown(SDLK_RIGHT))
+			if (g_pFramework->KeyDown(SDLK_RIGHT))
 			{
 				m_pForm->Move(SDLK_RIGHT, false);
 			} else
 			{
 				m_pForm->Move(SDLK_LEFT, false);
 			}
-			m_bKeyLock_Move = true; //verhindere Autofire, beim ersten Drücken!
+			m_bKeyLock_Move = true; //prevent autofire when first pressing move button
 		}
 
-		//KeyLock lösen, wenn keine Taste gedrückt wird:
-		//Wenn dieselbe Variable für Rotate und Move verwendet wird, ginge nicht beides gleichzeitig
 		if ((g_pFramework->KeyDown(SDLK_RIGHT) == false) && (g_pFramework->KeyDown(SDLK_LEFT) == false))
 		{
 			m_bKeyLock_Move = false;
@@ -106,8 +91,6 @@ void CGame::Run()
 		{
 			m_bKeyLock_Rotate = false;
 		}
-		
-		//bool newForm = false;
 
 		//ProcessFall
 		if (m_pForm->Fall() == false)
@@ -118,7 +101,7 @@ void CGame::Run()
 		g_pField->Update(m_Level);
 		if (g_pField->GetLines()/10 == (m_Level + 1))
 		{
-			m_Level++; //Erhöhe das Level, wenn 10 Reihen gelöscht wurden
+			m_Level++; 
 		}
 
 		m_pForm->Render();
@@ -127,13 +110,12 @@ void CGame::Run()
 }
 
 /****************************************************************************************************************************************************
-beendet das Spiel
+quit the game
 */
 
 
 void CGame::Quit()
 {
-	//Zeiger freigeben (delete) und auf NULL setzen
 	delete(m_pForm);
 	m_pForm = NULL;
 
@@ -142,7 +124,7 @@ void CGame::Quit()
 }
 
 /****************************************************************************************************************************************************
-prüft ob eine Taste zum beenden des Spiels gedrückt wurde 
+verify if a button is pressed to quit the game 
 */
 
 void CGame::ProcessEvents()
@@ -167,13 +149,13 @@ void CGame::ProcessEvents()
 		}
 }
 
-void CGame::spawnForm() //nicht zweimal hintereinander die gleiche Form?
-{
-	//spawne neue Form:
-	m_FormKind = static_cast<Form>(rand()%7);
+/****************************************************************************************************************************************************
+spawn new form
+*/
 
-	//TEST
-	//m_FormKind = S;
+void CGame::spawnForm() 
+{
+	m_FormKind = static_cast<Form>(rand()%7);
 
 			switch(m_FormKind)
 			{
@@ -200,7 +182,7 @@ void CGame::spawnForm() //nicht zweimal hintereinander die gleiche Form?
 				break;
 			}
 
-			//Startgeschw. 30
-			//Jedes Level + 5
+			//start tempo = 30
+			//each level + 5
 			m_pForm->Init(30.0f + 5*m_Level);
 }

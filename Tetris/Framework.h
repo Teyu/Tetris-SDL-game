@@ -8,7 +8,7 @@
 #include "Player.h"
 using namespace std;
 
-#define g_pFramework CFramework::Get() //Zeiger auf einzige Instanz von CFramework, der in jeder einbindenden Datei verwendet werden kann
+#define g_pFramework CFramework::Get() //pointer to single entity of CFramework
 
 class CFramework : public TSingleton<CFramework>
 {

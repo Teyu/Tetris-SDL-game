@@ -1,7 +1,7 @@
 #include "Form.h"
 
 /****************************************************************************************************************************************************
-Konstruktor
+constructor
 */
 
 CForm::CForm()
@@ -9,7 +9,7 @@ CForm::CForm()
 }
 
 /****************************************************************************************************************************************************
-Destruktor
+destructor
 */
 
 CForm::~CForm()
@@ -17,22 +17,19 @@ CForm::~CForm()
 }
 
 /****************************************************************************************************************************************************
-Initialisiert die Startposition der Form.
-Setzt InStartPos auf true (ALLGEMEIN)
+initialising
 */
 
 void CForm::Init(float fTempo)
 {
-	//Setze Position:
+	//set start position
 	Reset();
 
-	//Initialisiere Membervariablen:	
 	m_size = m_Pos[0].GetRect().h;
 	m_screenW = 10* m_size;
 	m_screenH = 20*m_size;
 	m_fTempo = fTempo;
 
-	//Initialisiere schnelles fallen:
 	m_bIsFallingFast = false;
 	m_FastFallingPoints = 0;
 	m_AutoMove = 0.0f;
@@ -42,7 +39,7 @@ void CForm::Init(float fTempo)
 }
 
 /****************************************************************************************************************************************************
-Legt Startposition fest. Diese wird von den abgeleiteten Klassen überschrieben (sieht je nach Form anders aus)
+set start position (to be overwritten)
 */
 
 void CForm::Reset()
@@ -50,7 +47,7 @@ void CForm::Reset()
 }
 
 /****************************************************************************************************************************************************
-rendert die Form (ALLGEMEIN)
+render form
 */
 
 void CForm::Render()
@@ -60,77 +57,71 @@ void CForm::Render()
 		m_Pos[i].Render();
 	}
 
-	g_pField->Render(); //Rendere auch die bereits liegenden Blöcke
+	g_pField->Render(); 
 }
 
 /****************************************************************************************************************************************************
-Die Form fällt in einer vorgegebenen Geschwindigkeit nach unten
-Sie hört auf zu fallen, wenn die Höhe des Blockfeldes erreicht wurde
-RÜCKGABEWERT: True, wenn die Form gefallen ist, false, wenn sie das Ende ihres Falls erreicht hat (ALLGEMEIN)
+form is falling down one block with defined speed.
+returns true if it actually fell down and false if the end of fall is reached.	
 */
 
 bool CForm::Fall()
 {
-	
-	//Bewege
 	float dy = m_fTempo * g_pTimer->GetElapsed();
 	Move(0.0f, dy);
 
-	bool ReturnValue = true; //false, wenn das Ende des Falls erreicht wurde
-	int h = m_size; //kürzere Schreibweise
+	bool ReturnValue = true; 
+	int h = m_size; 
 
-	//Prüfe zunächst, ob die Form mit den Blöcken andockt:
+	//verify if the end of fall is reached
 	for (int i = 0; i < 4; i++)
 	{
 		if ((m_Pos[i].GetRect().y/h == (m_screenH/h))
-			|| (g_pField->IsBlock(m_Pos[i].GetRect().x/h, (m_screenH - m_Pos[i].GetRect().y)/h - 1))) 
-			//Befindet sich auf der gleichen Position ein Block oder ist das Ende des Bildschirms erreicht?
-			//Beachte: Die Position ist immer ein Teiler von h!
+			|| (g_pField->IsBlock(m_Pos[i].GetRect().x/h, (m_screenH - m_Pos[i].GetRect().y)/h - 1)))
 		{
 			ReturnValue = false;
 			break;
 		}
 	}
 
-	//Falls das Ende das Falls erreicht wurde, füge die Figur den liegenden Blöcken hinzu...
 	if (ReturnValue == false)
 	{	
 		for (int i = 0; i < 4; i++)
 		{
-			//Setze die Form wieder einen Block hoch, sonst wird sie in die darunterliegenden Blöcke reingezeichnet.
-			//Dies ist notwendig, damit Figur noch bewegt werden kann!!
+			//reset position if the form didn't fall. 
+			//necessary so that one is still able to move a form that reached its end of fall
 			m_Pos[i].SetPos(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y - m_size);
 
 			g_pField->IncludeForm(m_Pos[i]);
 		}
-		//Der Spieler erhält Punkte für jeden Block, den er bis zum Boden durchgängig schnell fallen lies
 		if (m_FastFallingPoints != 0)
-			g_pPlayer->IncreasePoints(m_FastFallingPoints -1); //den letzten dabei nicht mitrechnen
+			g_pPlayer->IncreasePoints(m_FastFallingPoints -1); 
 
-		return false; //..und gebe false zurück
+		return false; 
 	}
 
 	return true;
 }
 
 /****************************************************************************************************************************************************
-Rotiert die Form, dabei muss abgefragt werden, ob genug Platz zum rotieren ist (ALLGEMEIN)
+rotate form if possible
 */
 
 void CForm::Rotate()
 {
-	int dx[4]; //Abstände der Blöcke zum Rotationspunkt
+	//difference of the blocks to the rotation point
+	int dx[4]; 
 	int dy[4];
 
-	//Prüfe zunächst, ob genug Platz zum rotieren ist: (sieht irgendwie hässlich aus...)
+	//verify if there is enough space to rotate
 	for (int i = 0; i < 4; i++)
 	{
 		if ((m_Pos[i].GetRect().x == m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
 		{
 			dx[i] = m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y;
 			dy[i] = dx[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0)) //Bildschirmrand?
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size))) //Block?
+			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0)) //end of screen?
+				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size))) //block?
 				return;
 		} else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y == m_Pos[m_RotPoint].GetRect().y))
 		{
@@ -153,7 +144,6 @@ void CForm::Rotate()
 			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y+ dy[i] < 0))
 				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size)))
 				return;
-		//TEST:
 		}else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
 		{
 			dx[i] = 0;
@@ -171,7 +161,6 @@ void CForm::Rotate()
 			dy[i] = 0;
 			dx[i] = (m_Pos[m_RotPoint].GetRect().x - m_Pos[i].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y- m_Pos[i].GetRect().y);
 		}
-		//ENDETEST
 		else
 		{
 			dx[i] = 0;
@@ -179,19 +168,19 @@ void CForm::Rotate()
 		}
 	}
 	
-	//Rotation:
+	//rotate
 	for (int i = 0; i < 4; i++)
 	{
 		m_Pos[i].SetPos(m_Pos[i].GetRect().x + dx[i], m_Pos[i].GetRect().y + dy[i]);
 	}
 
-	//Position hat sich verändert: (ACHTUNG: ohne Konvertierung in float würde die Figur beim Rotieren nicht fallen!)
+	//convertion to float otherwise the form wouldn't be falling while rotating
 	m_fXPos += static_cast<float>(dx[0]);
 	m_fYPos += static_cast<float>(dy[0]);
 }
 
 /****************************************************************************************************************************************************
-lässt die Form schnell herunterfallen (ALLGEMEIN)
+form is falling down at a higher speed if regarding button is pressed
 */
 
 void CForm::FastDown(bool bStart)
@@ -199,7 +188,7 @@ void CForm::FastDown(bool bStart)
 	if ((bStart) && (!m_bIsFallingFast))
 	{
 		float tmp = m_fTempo;
-		m_fTempo = m_fFastTempo; //Tempo erhöhen
+		m_fTempo = m_fFastTempo;
 		m_fFastTempo = tmp;
 		m_bIsFallingFast = true;
 	}
@@ -208,13 +197,13 @@ void CForm::FastDown(bool bStart)
 	{
 		float tmp = m_fFastTempo;
 		m_fFastTempo = m_fTempo;
-		m_fTempo = tmp; //Tempo zurücksetzen, FastTempo hat sich die geschw. gemerkt
+		m_fTempo = tmp; 
 		m_bIsFallingFast = false;
 	}
 }
 
 /****************************************************************************************************************************************************
-Bewegt die Form um eine Blockgröße nach links oder Rechts, je nach Übergabewert (ALLGEMEIN)
+move form one size of a block to the left or right depending on which button has been pressed
 */
 
 void CForm::Move(int Dir, bool KeyHold)
@@ -222,25 +211,24 @@ void CForm::Move(int Dir, bool KeyHold)
 	int puffer = 80;
 	float AutoSpeed = 500.0f;
 
-	//Prüfe zunächst, ob genug Platz ist:
+	//verify if there is enough space
 	for (int i = 0; i < 4; i++)
 	{
 		if (((m_Pos[i].GetRect().x >= (m_screenW - m_size)) && (Dir == SDLK_RIGHT)) 
-			|| ((m_Pos[i].GetRect().x <= 0) && (Dir == SDLK_LEFT))) //Ist der horizontale Bildschirmrand erreicht?
+			|| ((m_Pos[i].GetRect().x <= 0) && (Dir == SDLK_LEFT))) //horizontal screenborder?
 		{
 			return;
 		}
-		if ((m_Pos[i].GetRect().y/m_size - 1 >= 0) && (m_Pos[i].GetRect().x + 1 <= m_screenW) && //legale Übergabeparameter (vertikaler Bildschirmrand erreicht)?
-			(((g_pField->IsBlock(m_Pos[i].GetRect().x/m_size + 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_RIGHT)) //Block im Weg?
-			|| ((m_Pos[i].GetRect().x/m_size - 1 >= 0) && (m_Pos[i].GetRect().y/m_size - 1 >= 0) && //legale Übergabeparameter (vertikaler Bildschirmrand erreicht)?
-			(g_pField->IsBlock(m_Pos[i].GetRect().x/m_size - 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_LEFT)))) //Block im Weg?
-		{//Ist ein Block im Weg?
+		if ((m_Pos[i].GetRect().y/m_size - 1 >= 0) && (m_Pos[i].GetRect().x + 1 <= m_screenW) && //vertical screenborder (right)?
+			(((g_pField->IsBlock(m_Pos[i].GetRect().x/m_size + 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_RIGHT)) //is there a block in the way (right)?
+			|| ((m_Pos[i].GetRect().x/m_size - 1 >= 0) && (m_Pos[i].GetRect().y/m_size - 1 >= 0) && //vertical screenborder (left)?
+			(g_pField->IsBlock(m_Pos[i].GetRect().x/m_size - 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_LEFT)))) //is there a block in the way (left)?
+		{
 			return;
 		}
 	}
 
-	//Lege die Richtung fest:
-	float dx = 0.0f; //Wenn kein gültiger Wert übergeben wurde, bewegt sich die Form nicht
+	float dx = 0.0f; 
 
 	if (Dir == SDLK_RIGHT)
 	{
@@ -276,21 +264,18 @@ void CForm::Move(int Dir, bool KeyHold)
 		}
 	}
 
-	//Bewege:
 	Move(dx, 0.0f);
 }
 
 /****************************************************************************************************************************************************
-Bewegt die Form um den Vektor (dx, dy)
-(ALLGEMEIN)
+move form by vector (dx, dy)
 */
 
 void CForm::Move(float fdx, float fdy)
 {
 	m_fXPos += fdx;
 	m_fYPos += fdy;
-	//Fallen Blockweise:
-	//Beachte: Die Position soll ein Teiler von size sein, daher wird der überschüssige Teil abgeschnitten!
+	//blockwise movement
 	int x = static_cast<int>(m_fXPos) - static_cast<int>(m_fXPos)%m_size;
 	int y = static_cast<int>(m_fYPos) - static_cast<int>(m_fYPos)%m_size;
 
@@ -303,8 +288,7 @@ void CForm::Move(float fdx, float fdy)
 
 		m_Pos[i].SetPos( x, y); 
 
-		//Falls der Block gerade am Schnellfallen ist, gibt das Punkte pro Blockdifferenz:
-		if (((m_bIsFallingFast) && (i==0))/*Sonst wird  4 mal erhöht!*/ && ((m_Pos[i].GetRect().y - tmp.y)/m_size != 0)) 
+		if (((m_bIsFallingFast) && (i==0)) && ((m_Pos[i].GetRect().y - tmp.y)/m_size != 0)) 
 		{
 			m_FastFallingPoints += (m_Pos[i].GetRect().y - tmp.y)/m_size;
 		} else if (!m_bIsFallingFast)

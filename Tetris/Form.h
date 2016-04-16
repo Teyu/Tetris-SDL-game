@@ -15,8 +15,8 @@ public:
 	CForm();
 	~CForm();
 	void Render();
-	void Init(float fTempo); //lasse Form einen Zeiger auf das Feld übergeben, da sonst mit jedem Erzeugen einer neuen FOrm auch das Feld gelöscht wird!
-	virtual void Reset(); //man kann nur virtuelle Member überschreiben!
+	void Init(float fTempo); 
+	virtual void Reset(); //to be overwritten
 	bool Fall();
 	void Rotate();
 	void FastDown(bool bStart);
@@ -32,13 +32,12 @@ protected:
 	int m_screenH;
 	bool m_bIsFallingFast;
 	int m_FastFallingPoints;
-	float m_AutoMove; //legt den Zeitpuffer fest, bis Autofire aktiviert wird
-	CSprite m_Pos[4]; //array
+	float m_AutoMove; 
+	CSprite m_Pos[4]; 
 
 private:
 	void Move(float dx, float dy);
 
-	//CField m_Blocks;
 	float m_fTempo;
 	float m_fFastTempo;
 

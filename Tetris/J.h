@@ -8,7 +8,7 @@
 class CJ: public CForm
 {
 public:
-	virtual void Reset(); //Überschreibe
+	virtual void Reset(); 
 };
 
 #endif

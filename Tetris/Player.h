@@ -3,7 +3,7 @@
 
 #include "Singleton.h"
 
-#define g_pPlayer CPlayer::Get() //Zeiger auf einzige Instanz von CFramework, der in jeder einbindenden Datei verwendet werden kann
+#define g_pPlayer CPlayer::Get() 
 
 class CPlayer : public TSingleton<CPlayer>
 {

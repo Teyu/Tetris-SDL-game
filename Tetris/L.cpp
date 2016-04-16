@@ -10,8 +10,6 @@ void CL::Reset()
 	{
 		m_Pos[i].Load("Data/BlueBlock.bmp"); 
 	} 
-	//Position zurücksetzen:
-	//Die Form startet oben in der Mitte:
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
 	m_fYPos = 0.0f;
 	m_fXPos -= m_Pos[0].GetRect().w;
@@ -30,7 +28,6 @@ void CL::Reset()
 		}
 	}
 
-	//Nicht vergessen: FastFall zurücksetzen:
 	if (m_bIsFallingFast)
 		FastDown(false);
 }
