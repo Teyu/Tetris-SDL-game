@@ -1,0 +1,6 @@
+{
+  "name": "learn how to code with Tetris",
+  "tagline": "This is a small project where mostly beginners should be able to get into easily. Everyone who wants to participate in this journey of learning how to program games with c++ is very welcome to join in :-)",
+  "body": "\r\n![screenshot](https://github.com/Teyu/Tetris-SDL-game/blob/master/TetrisScreenshot)\r\n\r\n# A Tetris SDL-game\r\n\r\n## suggestions and comments are always very welcome :-)\r\n\r\nThis is a remake of the classic tetris game in early progress.\r\n\r\nThis project serves for me to improve my c++ skills, learn cross-platform programming with cmake, \r\nas well as putting in audio and animations. First of all I want to improve my skills (I am a newbie) and hopefully the result will be a game that everyone is welcome to play and to just have fun with it :-)\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
