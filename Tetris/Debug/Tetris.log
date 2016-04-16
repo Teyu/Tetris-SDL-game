@@ -1,0 +1,39 @@
+﻿Der Buildvorgang wurde am 07.04.2015 19:16:48 gestartet.
+     1>Projekt "C:\Users\Julia\documents\visual studio 2010\Projects\Tetris\Tetris\Tetris.vcxproj" auf Knoten "2", build Ziel(e).
+     1>InitializeBuildStatus:
+         "Debug\Tetris.unsuccessfulbuild" wird erstellt, da "AlwaysCreate" angegeben wurde.
+       ClCompile:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I"C:\Users\Julia\Documents\Visual Studio 2010\SDL_ttf-2.0.11\include" /I"C:\Users\Julia\Documents\Visual Studio 2010\SDL-1.2.15\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Framework.cpp
+         Framework.cpp
+       ManifestResourceCompile:
+         Alle Ausgaben sind aktuell.
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Julia\documents\visual studio 2010\Projects\Tetris\Debug\Tetris.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Julia\Documents\Visual Studio 2010\SDL_ttf-2.0.11\lib\x86" /LIBPATH:"C:\Users\Julia\Documents\Visual Studio 2010\SDL-1.2.15\lib\x86" SDL.lib SDLmain.lib SDL_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Tetris.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Julia\documents\visual studio 2010\Projects\Tetris\Debug\Tetris.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Julia\documents\visual studio 2010\Projects\Tetris\Debug\Tetris.lib" /MACHINE:X86 Debug\Tetris.exe.embed.manifest.res
+         Debug\Bar.obj
+         Debug\Field.obj
+         Debug\Form.obj
+         Debug\Framework.obj
+         Debug\Game.obj
+         Debug\J.obj
+         Debug\L.obj
+         Debug\main.obj
+         Debug\S.obj
+         Debug\Sprite.obj
+         Debug\Sqaure.obj
+         Debug\T.obj
+         Debug\Timer.obj
+         Debug\Z.obj
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\Tetris.exe.embed.manifest" /manifest Debug\Tetris.exe.intermediate.manifest
+         Alle Ausgaben sind aktuell.
+       LinkEmbedManifest:
+         Alle Ausgaben sind aktuell.
+         Tetris.vcxproj -> C:\Users\Julia\documents\visual studio 2010\Projects\Tetris\Debug\Tetris.exe
+       FinalizeBuildStatus:
+         Die Datei "Debug\Tetris.unsuccessfulbuild" wird gelöscht.
+         Aktualisieren des Timestamps von "Debug\Tetris.lastbuildstate".
+     1>Die Erstellung des Projekts "C:\Users\Julia\documents\visual studio 2010\Projects\Tetris\Tetris\Tetris.vcxproj" ist abgeschlossen, build Ziel(e).
+
+Das Erstellen war erfolgreich.
+
+Verstrichene Zeit 00:00:05.02
