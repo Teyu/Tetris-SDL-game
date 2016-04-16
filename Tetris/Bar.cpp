@@ -10,8 +10,8 @@ void CBar::Reset()
 		m_Pos[i].Load("Data/RedBlock.bmp"); 
 	} 
 
-	//Position zurücksetzen:
-	//Die Form startet oben in der Mitte:
+	//reset position
+	//form starts on top central
 	
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
 	m_fXPos -= 2*m_Pos[0].GetRect().w;
@@ -25,7 +25,7 @@ void CBar::Reset()
 		x += m_Pos[i].GetRect().w;
 	}
 
-	//Nicht vergessen: FastFall zurücksetzen:
+	//reset FastFall, otherwise new form could be falling fast 
 	if (m_bIsFallingFast)
 		FastDown(false);
 }

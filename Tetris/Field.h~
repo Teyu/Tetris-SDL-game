@@ -10,7 +10,7 @@
 
 using namespace std;
 
-#define g_pField CField::Get() //pointer to single entity of CField
+#define g_pField CField::Get() //pointer to single entity of CFramework
 
 class CField : public TSingleton<CField>
 {

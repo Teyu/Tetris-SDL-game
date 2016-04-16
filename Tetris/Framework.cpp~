@@ -26,7 +26,7 @@ bool CFramework::Init(int ScreenWidth, int ScreenHeight, int ColorDepth, bool bF
 
 	if (m_pScreen == NULL)
 	{
-		cout << "video mode could not be set" << endl;
+		cout << "couldn not set video mode" << endl;
 		cout << "Error: " << SDL_GetError() << endl;
 
 		Quit();

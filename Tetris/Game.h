@@ -25,9 +25,7 @@ private:
 	void ProcessEvents();
 	void spawnForm();
 
-	//Zeiger auf Spieler
-	//Zeiger auf eine Form
-	CForm *m_pForm; //WICHTIG: Ohne Zeiger könnte man nicht realisieren in m_Form eine bel. abgel. Klasse von CForm zu speichern!!!
+	CForm *m_pForm; 
 	enum Form{Bar, Square, L, J, Z, S, T}; 
 	Form m_FormKind;
 	bool m_bGameRun;

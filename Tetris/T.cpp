@@ -12,8 +12,6 @@ void CT::Reset()
 		m_Pos[i].Load("Data/TurkisBlock.bmp"); 
 	} 
 
-	//Position zurücksetzen:
-	//Die Form startet oben in der Mitte:
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
 	m_fYPos = 0.0f;
 	m_fXPos -= m_Pos[0].GetRect().w;
@@ -28,7 +26,6 @@ void CT::Reset()
 	y -= m_Pos[0].GetRect().w;
 	m_Pos[3].SetPos(x,y);
 
-	//Nicht vergessen: FastFall zurücksetzen:
 	if (m_bIsFallingFast)
 		FastDown(false);
 }

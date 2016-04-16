@@ -11,8 +11,6 @@ void CZ::Reset()
 		m_Pos[i].Load("Data/GreenBlock.bmp"); 
 	} 
 
-	//Position zurücksetzen:
-	//Die Form startet oben in der Mitte:
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
 	m_fYPos = 0.0f;
 	m_fXPos -= m_Pos[0].GetRect().w;
@@ -26,7 +24,6 @@ void CZ::Reset()
 	x += m_Pos[0].GetRect().w;
 	m_Pos[3].SetPos(x,y);
 
-	//Nicht vergessen: FastFall zurücksetzen:
 	if (m_bIsFallingFast)
 		FastDown(false);
 }

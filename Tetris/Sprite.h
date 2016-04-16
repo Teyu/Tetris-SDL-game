@@ -1,5 +1,3 @@
-//Ein SPRITE ist eine kleine rechteckige Grafik, die man auf dem Bildschirm anzeigen kann
-
 #ifndef SPRITE_H
 #define SPRITE_H
 
@@ -16,13 +14,13 @@ public:
 	void SetPos(float fXPos, float fYPos);
 	void Render();
 	SDL_Rect GetRect() {return m_Rect;}
-	string GetImageFile() { return m_sImageFile;} //TEST
+	string GetImageFile() { return m_sImageFile;} 
 
 private:
 	SDL_Surface *m_pScreen;
 	SDL_Surface *m_pImage;
 	SDL_Rect m_Rect;
-	string m_sImageFile;//TEST
+	string m_sImageFile;
 
 };
 

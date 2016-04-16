@@ -12,8 +12,6 @@ void CSquare::Reset()
 		m_Pos[i].Load("Data/OrangeBlock.bmp"); 
 	} 
 
-	//Position zurücksetzen:
-	//Die Form startet oben in der Mitte:
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
 	m_fYPos = 0.0f;
 	m_fXPos -= m_Pos[0].GetRect().w;
@@ -31,7 +29,6 @@ void CSquare::Reset()
 		}
 	}
 
-	//Nicht vergessen: FastFall zurücksetzen:
 	if (m_bIsFallingFast)
 		FastDown(false);
 }

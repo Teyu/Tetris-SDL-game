@@ -11,7 +11,7 @@ public:
 	virtual ~TSingleton() {}
 	inline static T* Get()
 	{
-		if (!m_pSingleton) //Existiert schon eine Instanz?
+		if (!m_pSingleton) 
 		{
 			m_pSingleton = new T;
 		}
@@ -27,7 +27,6 @@ public:
 	}
 };
 
-//statische Variablen müssen außerhalb erzeugt werden!
 template <class T>
 T* TSingleton<T>::m_pSingleton = 0;
 

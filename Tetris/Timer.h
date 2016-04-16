@@ -5,6 +5,7 @@
 #include <SDL_ttf.h>
 #include "Singleton.h"
 #include <iostream>
+
 using namespace std;
 
 #define g_pTimer CTimer::Get()
@@ -17,9 +18,9 @@ public:
 	float GetElapsed () { return m_fElapsed;}
 
 private:
-	float m_fElapsed; //vergangene Zeit seit dem letzten Frame
-	float m_fCurTime; //aktualle Zeit
-	float m_fLastTime; //Zeit des letzten Frames
+	float m_fElapsed; 
+	float m_fCurTime; 
+	float m_fLastTime; 
 };
 
 #endif
