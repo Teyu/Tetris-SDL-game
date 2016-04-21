@@ -1,5 +1,9 @@
 #include "Z.h"
 
+CZ::~CZ()
+{
+}
+
 void CZ::Reset()
 {
 
@@ -8,7 +12,7 @@ void CZ::Reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Pos[i].Load("Data/GreenBlock.bmp"); 
+        m_Pos[i].Load("data/GreenBlock.bmp");
 	} 
 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;

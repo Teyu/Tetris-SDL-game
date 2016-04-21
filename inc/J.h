@@ -3,12 +3,11 @@
 
 #include "Form.h"
 
-//BUG: Rotieren!
-
 class CJ: public CForm
 {
 public:
-	virtual void Reset(); 
+    virtual void Reset();
+    virtual ~CJ();
 };
 
 #endif

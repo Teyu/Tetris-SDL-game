@@ -36,7 +36,7 @@ bool CFramework::Init(int ScreenWidth, int ScreenHeight, int ColorDepth, bool bF
 
 	SDL_WM_SetCaption("Tetris", "Tetris");
 
-	if (TTF_Init() != 0)
+    /*if (TTF_Init() != 0)
 	{
 		cout << "SDL_tff could not be initialised" << endl;
 		cout << "Error: " << TTF_GetError() << endl;
@@ -69,7 +69,7 @@ bool CFramework::Init(int ScreenWidth, int ScreenHeight, int ColorDepth, bool bF
 		Quit();
       
 		return false;
-	}
+    }*/
 
 
 	m_pKeystate = SDL_GetKeyState(NULL);
@@ -86,7 +86,7 @@ shut down framework
 
 void CFramework::Quit()
 {
-	TTF_Quit();
+    //TTF_Quit();
 	SDL_Quit();
 }
 
@@ -145,18 +145,18 @@ void CFramework::Flip()
 	cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
       }
 
-	SDL_Surface *text;
+    /*SDL_Surface *text;
 	stringstream s; 
 	s << g_pPlayer->GetPoints();
 	text = TTF_RenderText_Solid(font, s.str().c_str(), text_color);
 	Pos_points.x += Pos_points.w; 
 	Pos_points.w = text->w;
-	Pos_points.h = text->h;
+    Pos_points.h = text->h;
 
 	if (SDL_BlitSurface(text, NULL, m_pScreen, &Pos_points) != 0)
       { 
 		  cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
-      }
+      }*/
 
 	//dividing line
 	SDL_Rect LineBlock;

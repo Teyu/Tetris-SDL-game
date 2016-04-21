@@ -4,24 +4,34 @@ project(Tetris)
 
 #tell compiler where to search for include-files
 include_directories( inc )
-include_directories( inc/SDL ) # THIS SHOULD BE TAKEN OUT
-
-#tell linker where to search for libraries 
-#link_directories( /usr/lib )
-#set (LIBS libSDL.so libSDL_ttf.so)
 
 #file( GLOB ...) allows globbing expressions
 file(GLOB SOURCES src/*.cpp)
 
 #set compiler flags
-set (CMAKE_CXX_FLAGS "-std=c++11")
+set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -g") # `sdl-config --libs`
 
 add_executable( Tetris ${SOURCES} )
-#target_link_libraries( Tetris ${LIBS} )
+
+#CMAKE_PREFIX_PATH = /usr/lib/i386-linux-gnu/ NECESSARY ON WINDOWS?
 
 find_package (SDL REQUIRED)
+#SDL_ttf
+
 if (SDL_FOUND)
-	include_directories(${SDL_INCLUDE_DIRS}) #DOENS'T FIND HEADER FILES??
-	target_link_libraries (Tetris ${SDL_LIBRARIES})
+	include_directories( ${SDL_INCLUDE_DIRS})
+	target_link_libraries (Tetris ${SDL_LIBRARY}) 
 endif (SDL_FOUND)
+
+IF( NOT SDL_INCLUDE_DIR)
+	message( FATAL_ERROR "SDL_INCLUDE_DIR not set" )
+ELSE()
+	message( "found SDL_INCLUDE_DIR under ${SDL_INCLUDE_DIR}" )
+ENDIF()
+
+IF( NOT SDL_LIBRARY)
+	message( FATAL_ERROR "SDL_LIBRARIES not set" )
+ELSE()
+	message( "found SDL_LIBRARIES under ${SDL_LIBRARY}")
+ENDIF()
 

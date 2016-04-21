@@ -6,7 +6,8 @@
 class CSquare: public CForm
 {
 public:
-	virtual void Reset(); 
+    virtual void Reset();
+    virtual ~CSquare();
 };
 
 #endif

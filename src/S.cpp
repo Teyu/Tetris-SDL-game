@@ -1,5 +1,9 @@
 #include "S.h"
 
+CS::~CS()
+{
+}
+
 void CS::Reset()
 {
 
@@ -8,7 +12,7 @@ void CS::Reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Pos[i].Load("Data/YellowBlock.bmp"); 
+        m_Pos[i].Load("data/YellowBlock.bmp");
 	} 
 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;

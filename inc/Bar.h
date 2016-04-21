@@ -6,7 +6,8 @@
 class CBar: public CForm
 {
 public:
-	virtual void Reset(); //to be overwritten
+    virtual void Reset(); //to be overwritten
+    virtual ~CBar();
 };
 
 #endif

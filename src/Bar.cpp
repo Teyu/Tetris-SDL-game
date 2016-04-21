@@ -1,5 +1,9 @@
 #include "Bar.h"
 
+CBar::~CBar()
+{
+}
+
 void CBar::Reset()
 {
 	int x = static_cast<int>(m_fXPos);
@@ -7,7 +11,7 @@ void CBar::Reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Pos[i].Load("Data/RedBlock.bmp"); 
+        m_Pos[i].Load("data/RedBlock.bmp");
 	} 
 
 	//reset position

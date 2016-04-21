@@ -1,5 +1,9 @@
 #include "T.h"
 
+CT::~CT()
+{
+}
+
 void CT::Reset()
 {
 
@@ -9,7 +13,7 @@ void CT::Reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Pos[i].Load("Data/TurkisBlock.bmp"); 
+        m_Pos[i].Load("data/TurkisBlock.bmp");
 	} 
 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;

@@ -1,8 +1,8 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include "SDL/SDL.h"
+#include "SDL/SDL_ttf.h"
 #include "Singleton.h"
 #include <iostream>
 

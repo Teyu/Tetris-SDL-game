@@ -1,5 +1,9 @@
 #include "L.h"
 
+CL::~CL()
+{
+}
+
 void CL::Reset()
 {
 	
@@ -8,7 +12,7 @@ void CL::Reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Pos[i].Load("Data/BlueBlock.bmp"); 
+        m_Pos[i].Load("data/BlueBlock.bmp");
 	} 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
 	m_fYPos = 0.0f;

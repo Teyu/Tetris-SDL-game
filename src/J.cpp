@@ -1,5 +1,9 @@
 #include "J.h"
 
+CJ::~CJ()
+{
+}
+
 void CJ::Reset()
 {
 	
@@ -9,7 +13,7 @@ void CJ::Reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Pos[i].Load("Data/VioletBlock.bmp"); 
+        m_Pos[i].Load("data/VioletBlock.bmp");
 	} 
 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;

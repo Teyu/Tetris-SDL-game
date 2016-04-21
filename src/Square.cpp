@@ -1,5 +1,9 @@
 #include "Square.h"
 
+CSquare::~CSquare()
+{
+}
+
 void CSquare::Reset()
 {
 
@@ -9,7 +13,7 @@ void CSquare::Reset()
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Pos[i].Load("Data/OrangeBlock.bmp"); 
+        m_Pos[i].Load("data/OrangeBlock.bmp");
 	} 
 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
