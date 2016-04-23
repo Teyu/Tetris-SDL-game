@@ -4,7 +4,12 @@
 constructor
 */
 
-CForm::CForm()
+CForm::CForm() : m_fXPos(0.0f), m_fYPos(0.0f),
+    m_RotPoint(0), m_size(0),
+    m_screenW(0), m_screenH(0),
+    m_bIsFallingFast(false), m_FastFallingPoints(0),
+    m_AutoMove(0.0f),
+    m_fTempo(0.0f), m_fFastTempo(0.0f)
 {
 }
 

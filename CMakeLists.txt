@@ -9,7 +9,7 @@ include_directories( inc )
 file(GLOB SOURCES src/*.cpp)
 
 #set compiler flags
-set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -g") # `sdl-config --libs`
+set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
 
 add_executable( Tetris ${SOURCES} )
 

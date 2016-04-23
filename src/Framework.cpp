@@ -125,7 +125,7 @@ display on screen
 void CFramework::Flip()
 {
 	//display text
-	SDL_Rect Pos_points;
+    /*SDL_Rect Pos_points;
 	SDL_Rect Pos_level;
 	Pos_points.x = 320;
 	Pos_level.x = 320;
@@ -145,7 +145,7 @@ void CFramework::Flip()
 	cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
       }
 
-    /*SDL_Surface *text;
+    SDL_Surface *text;
 	stringstream s; 
 	s << g_pPlayer->GetPoints();
 	text = TTF_RenderText_Solid(font, s.str().c_str(), text_color);

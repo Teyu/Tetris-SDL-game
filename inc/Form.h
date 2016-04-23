@@ -12,7 +12,7 @@ using namespace std;
 class CForm 
 {
 public:
-	CForm();
+    CForm();
     virtual ~CForm();
 	void Render();
 	void Init(float fTempo); 
