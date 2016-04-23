@@ -1,37 +1,56 @@
 cmake_minimum_required (VERSION 2.8.12)
 
-project(Tetris)
+PROJECT(Tetris)
 
 #tell compiler where to search for include-files
-include_directories( inc )
+INCLUDE_DIRECTORIES( inc )
 
 #file( GLOB ...) allows globbing expressions
-file(GLOB SOURCES src/*.cpp)
+FILE(GLOB SOURCES src/*.cpp)
 
 #set compiler flags
-set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
+SET(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
 
-add_executable( Tetris ${SOURCES} )
+ADD_EXECUTABLE( Tetris ${SOURCES} )
 
 #CMAKE_PREFIX_PATH = /usr/lib/i386-linux-gnu/ NECESSARY ON WINDOWS?
 
-find_package (SDL REQUIRED)
-#SDL_ttf
+#include SDL-library
+FIND_PACKAGE(SDL REQUIRED)
 
-if (SDL_FOUND)
-	include_directories( ${SDL_INCLUDE_DIRS})
-	target_link_libraries (Tetris ${SDL_LIBRARY}) 
-endif (SDL_FOUND)
-
-IF( NOT SDL_INCLUDE_DIR)
-	message( FATAL_ERROR "SDL_INCLUDE_DIR not set" )
-ELSE()
-	message( "found SDL_INCLUDE_DIR under ${SDL_INCLUDE_DIR}" )
+IF(SDL_FOUND)
+        INCLUDE_DIRECTORIES( ${SDL_INCLUDE_DIRS})
+        TARGET_LINK_LIBRARIES(Tetris ${SDL_LIBRARY})
 ENDIF()
 
-IF( NOT SDL_LIBRARY)
-	message( FATAL_ERROR "SDL_LIBRARIES not set" )
+IF(NOT SDL_LIBRARY)
+        MESSAGE( FATAL_ERROR "SDL_LIBRARIES not set" )
 ELSE()
-	message( "found SDL_LIBRARIES under ${SDL_LIBRARY}")
+        MESSAGE( "found SDL_LIBRARIES under ${SDL_LIBRARY}")
 ENDIF()
+IF(NOT SDL_INCLUDE_DIR)
+        MESSAGE( FATAL_ERROR "SDL_INCLUDE_DIR not set" )
+ELSE()
+        MESSAGE( "found SDL_INCLUDE_DIR under ${SDL_INCLUDE_DIR}" )
+ENDIF()
+
+#include SDL_ttf-library
+FIND_PACKAGE(SDL_ttf REQUIRED)
+
+IF(SDL_TTF_FOUND)
+        INCLUDE_DIRECTORIES( ${SDL_TTF_INCLUDE_DIRS})
+        TARGET_LINK_LIBRARIES(Tetris ${SDL_TTF_LIBRARY})
+ENDIF()
+
+IF(NOT SDL_TTF_LIBRARY)
+        MESSAGE( FATAL_ERROR "SDL_TTF_LIBRARIES not set" )
+ELSE()
+        MESSAGE( "found SDL_TTF_LIBRARIES under ${SDL_TTF_LIBRARY}")
+ENDIF()
+IF(NOT SDL_TTF_INCLUDE_DIR)
+        MESSAGE( FATAL_ERROR "SDL_TTF_INCLUDE_DIR not set" )
+ELSE()
+        MESSAGE( "found SDL_TTF_INCLUDE_DIR under ${SDL_TTF_INCLUDE_DIR}" )
+ENDIF()
+
 
