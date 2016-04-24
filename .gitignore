@@ -22,6 +22,9 @@
 *.a
 *.lib
 
+# autosaves
+*~
+
 # Executables
 *.exe
 *.out
