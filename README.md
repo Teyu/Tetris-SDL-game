@@ -6,4 +6,4 @@ This project serves for me to improve my c++ skills, learn cross-platform progra
 as well as putting in audio and animations. First of all I want to improve my skills (I am a newbie) and hopefully the result will
 be a game that everyone is welcome to play and to just have fun with it :-)
 
-![Screenshot](https://github.com/Teyu/Tetris-SDL-game/blob/master/TetrisScreenshot)
+![Screenshot](https://github.com/Teyu/Tetris-SDL-game/blob/master/TetrisScreenshot.png)
