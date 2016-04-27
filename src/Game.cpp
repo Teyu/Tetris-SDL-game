@@ -29,6 +29,8 @@ void CGame::Init()
 	m_bGameRun = true;
 
 	m_bKeyLock_Move = false;
+    m_bKeyLock_Fall = false;
+    m_bKeyLock_Rotate = false;
 }
 
 /****************************************************************************************************************************************************
@@ -46,12 +48,15 @@ void CGame::Run()
 		g_pFramework->Clear();
 
 		//ProcessFallFaster
-		if (g_pFramework->KeyDown(SDLK_DOWN))
+        if (g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == false))
 		{
 			m_pForm->FastDown(true); //autofire
-		}else
-		{
-			m_pForm->FastDown(false);
+        }else if (!g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == true))
+        {
+            m_bKeyLock_Fall = false;
+        }
+        else{
+            m_pForm->FastDown(false);
 		}
 			
 		//ProcessRotate
@@ -96,7 +101,8 @@ void CGame::Run()
 		if (m_pForm->Fall() == false)
 		{
 			spawnForm();
-		}
+            m_bKeyLock_Fall = true;
+        }
 
 		g_pField->Update(m_Level);
 		if (g_pField->GetLines()/10 == (m_Level + 1))

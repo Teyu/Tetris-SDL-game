@@ -17,9 +17,10 @@ void CSquare::Reset()
 	} 
 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
-	m_fYPos = 0.0f;
+    m_fYPos = m_Pos[0].GetRect().h;;
 	m_fXPos -= m_Pos[0].GetRect().w;
 	x = m_fXPos;
+    y = m_fYPos;
 
 	for (int i = 0; i < 4; i++)
 	{

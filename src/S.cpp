@@ -16,7 +16,7 @@ void CS::Reset()
 	} 
 
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
-	m_fYPos = m_Pos[0].GetRect().w;
+    m_fYPos = 2*m_Pos[0].GetRect().w;
 	m_fXPos -= m_Pos[0].GetRect().w;
 	x = m_fXPos;
 	y = m_fYPos;

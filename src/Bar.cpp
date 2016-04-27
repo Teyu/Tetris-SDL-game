@@ -20,7 +20,8 @@ void CBar::Reset()
 	m_fXPos = 10*m_Pos[0].GetRect().w/2;
 	m_fXPos -= 2*m_Pos[0].GetRect().w;
 	x = m_fXPos;
-	m_fYPos = 0.0f;
+    m_fYPos = m_Pos[0].GetRect().h;
+    y = m_fYPos;
 
 	for (int i = 0; i < 4; i++)
 	{
