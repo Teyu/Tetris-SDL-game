@@ -161,7 +161,7 @@ spawn new form
 
 void CGame::spawnForm() 
 {
-	m_FormKind = static_cast<Form>(rand()%7);
+    m_FormKind = static_cast<Form>(rand()%7);
 
 			switch(m_FormKind)
 			{
