@@ -31,6 +31,7 @@ private:
 	bool m_bGameRun;
 	bool m_bKeyLock_Move;
 	bool m_bKeyLock_Rotate;
+    bool m_bKeyLock_Fall;
 	int m_Level;
 };
 
