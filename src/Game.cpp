@@ -98,7 +98,7 @@ void CGame::Run()
 		}
 
 		//ProcessFall
-		if (m_pForm->Fall() == false)
+        if (m_pForm->Fall() == false)
 		{
 			spawnForm();
             m_bKeyLock_Fall = true;

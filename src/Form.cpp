@@ -94,7 +94,7 @@ bool CForm::Fall()
 		for (int i = 0; i < 4; i++)
 		{
 			//reset position if the form didn't fall. 
-			//necessary so that one is still able to move a form that reached its end of fall
+            //necessary so that one is still able to move a form horizontally that reached its end of fall
 			m_Pos[i].SetPos(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y - m_size);
 
 			g_pField->IncludeForm(m_Pos[i]);
@@ -114,74 +114,39 @@ rotate form if possible
 
 void CForm::Rotate()
 {
-	//difference of the blocks to the rotation point
-	int dx[4]; 
-	int dy[4];
+    float x_newP[4];
+    float y_newP[4];
 
-	//verify if there is enough space to rotate
-	for (int i = 0; i < 4; i++)
-	{
-		if ((m_Pos[i].GetRect().x == m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y;
-			dy[i] = dx[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0)) //end of screen?
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size))) //block?
-				return;
-		} else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y == m_Pos[m_RotPoint].GetRect().y))
-		{
-			dy[i] = m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x;
-			dx[i] = -dy[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0))
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size)))
-				return;
-		}else if ((m_Pos[i].GetRect().x == m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y > m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y;
-			dy[i] = dx[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0))
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size)))
-				return;
-		}else if ((m_Pos[i].GetRect().x < m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y == m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = m_Pos[m_RotPoint].GetRect().x - m_Pos[i].GetRect().x;
-			dy[i] = -dx[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y+ dy[i] < 0))
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size)))
-				return;
-		}else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = 0;
-			dy[i] = (m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y);
-		} else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y > m_Pos[m_RotPoint].GetRect().y))
-		{
-			dy[i] = 0;
-			dx[i] = (m_Pos[m_RotPoint].GetRect().x - m_Pos[i].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y);
-		} else if ((m_Pos[i].GetRect().x < m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y > m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = 0;
-			dy[i] = (m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y);
-		} else if ((m_Pos[i].GetRect().x < m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
-		{
-			dy[i] = 0;
-			dx[i] = (m_Pos[m_RotPoint].GetRect().x - m_Pos[i].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y- m_Pos[i].GetRect().y);
-		}
-		else
-		{
-			dx[i] = 0;
-			dy[i] = 0;
-		}
-	}
-	
-	//rotate
-	for (int i = 0; i < 4; i++)
-	{
-		m_Pos[i].SetPos(m_Pos[i].GetRect().x + dx[i], m_Pos[i].GetRect().y + dy[i]);
-	}
+    for (int i = 0; i < 4; i++)
+    {
+        //x-axis and y-axis values of m_Pos if m_RotPoint was (0,0)
+        float x_RotP = m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x;
+        float y_RotP = m_Pos[i].GetRect().y - m_Pos[m_RotPoint].GetRect().y;
 
-	//convertion to float otherwise the form wouldn't be falling while rotating
-	m_fXPos += static_cast<float>(dx[0]);
-	m_fYPos += static_cast<float>(dy[0]);
+        //90°-rotation of (x_RotP, y_RotP) at m_RotPoint
+        float x = x_RotP;
+        float y = y_RotP;
+        x_RotP = - y;
+        y_RotP = x;
+
+        x_newP[i] = m_Pos[m_RotPoint].GetRect().x + x_RotP;
+        y_newP[i] = m_Pos[m_RotPoint].GetRect().y + y_RotP;
+
+    //verify if there is enough space to rotate
+
+        if ((x_newP[i] >= m_screenW) || (x_newP[i] < 0.0f)) return;
+        if ((y_newP[i] >= m_screenH) || (y_newP[i] < 0.0f)) return;
+        if (g_pField->IsBlock(x_newP[i]/m_size,(m_screenH - y_newP[i])/m_size - 1)) return;
+    }
+
+    //update member variables:
+    m_fXPos += (x_newP[0] - m_Pos[0].GetRect().x);
+    m_fYPos += (y_newP[0] - m_Pos[0].GetRect().y);
+
+    for (int i = 0; i < 4; i++)
+    {
+        m_Pos[i].SetPos(x_newP[i], y_newP[i]);
+    }
 }
 
 /****************************************************************************************************************************************************
