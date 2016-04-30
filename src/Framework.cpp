@@ -74,8 +74,8 @@ bool CFramework::Init(int ScreenWidth, int ScreenHeight, int ColorDepth, bool bF
 
 	m_pKeystate = SDL_GetKeyState(NULL);
 
-	ScreenW = ScreenWidth;
-	ScreenH = ScreenHeight;
+    m_ScreenW = ScreenWidth;
+    m_ScreenH = ScreenHeight;
 
 	return true;
 }

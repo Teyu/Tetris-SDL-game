@@ -20,8 +20,8 @@ public:
 	void Flip();
 	bool KeyDown( int Key_ID);
 	SDL_Surface *GetScreen() { return m_pScreen;}
-	int GetScreenWidth() { return ScreenW;}
-	int GetScreenHeight() { return ScreenH;}
+    int GetScreenWidth() { return m_ScreenW;}
+    int GetScreenHeight() { return m_ScreenH;}
 
 private:
 	SDL_Surface *m_pScreen;
@@ -30,8 +30,8 @@ private:
 	TTF_Font *font;
 	SDL_Color text_color;
 	Uint8 *m_pKeystate;
-	int ScreenW;
-	int ScreenH;
+    int m_ScreenW;
+    int m_ScreenH;
 };
 
 #endif

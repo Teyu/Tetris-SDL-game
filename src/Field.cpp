@@ -90,7 +90,7 @@ void CField::Update(int Level)
 return wether stated position has a block 
 */
 
-bool CField::IsBlock( int XPix, int YPix)
+bool CField::IsBlock( float fXPix, float fYPix)
 { 
 	//legal parameters?
 //TODO: display error message only in debug version
@@ -118,7 +118,7 @@ bool CField::IsBlock( int XPix, int YPix)
 		exit(1);
 	}*/
 
-	return m_field[XPix][YPix];
+    return m_field[int(fXPix/m_size)][int((m_screenH - fYPix)/m_size - 1)];
 }
 
 /****************************************************************************************************************************************************

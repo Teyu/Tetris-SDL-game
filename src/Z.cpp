@@ -4,7 +4,7 @@ CZ::~CZ()
 {
 }
 
-void CZ::Reset()
+void CZ::ResetPos()
 {
 	for (int i = 0; i < 4; i++)
 	{

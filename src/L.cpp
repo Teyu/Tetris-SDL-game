@@ -4,7 +4,7 @@ CL::~CL()
 {
 }
 
-void CL::Reset()
+void CL::ResetPos()
 {
 	for (int i = 0; i < 4; i++)
 	{

@@ -4,7 +4,7 @@ CJ::~CJ()
 {
 }
 
-void CJ::Reset()
+void CJ::ResetPos()
 {
 	for (int i = 0; i < 4; i++)
 	{

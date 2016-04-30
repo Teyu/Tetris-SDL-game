@@ -8,7 +8,7 @@ CForm::CForm() : m_fXPos(0.0f), m_fYPos(0.0f),
     m_RotPoint(0), m_size(0),
     m_screenW(0), m_screenH(0),
     m_bIsFallingFast(false), m_FastFallingPoints(0),
-    m_AutoMove(0.0f),
+    m_fAutoMove(0.0f),
     m_fTempo(0.0f), m_fFastTempo(0.0f)
 {
 }
@@ -28,7 +28,7 @@ initialising
 void CForm::Init(float fTempo)
 {
 	//set start position
-	Reset();
+    ResetPos();
 
 	m_size = m_Pos[0].GetRect().h;
 	m_screenW = 10* m_size;
@@ -37,7 +37,7 @@ void CForm::Init(float fTempo)
 
 	m_bIsFallingFast = false;
 	m_FastFallingPoints = 0;
-	m_AutoMove = 0.0f;
+    m_fAutoMove = 0.0f;
 	m_fFastTempo = 600.0f;
 
 	m_RotPoint = 1; 
@@ -47,7 +47,7 @@ void CForm::Init(float fTempo)
 set start position (to be overwritten)
 */
 
-void CForm::Reset()
+void CForm::ResetPos()
 {
 }
 
@@ -75,14 +75,13 @@ bool CForm::Fall()
 	float dy = m_fTempo * g_pTimer->GetElapsed();
 	Move(0.0f, dy);
 
-	bool ReturnValue = true; 
-	int h = m_size; 
+    bool ReturnValue = true;
 
-	//verify if the end of fall is reached
+    //verify if the bottom screen border is reached
 	for (int i = 0; i < 4; i++)
 	{
-		if ((m_Pos[i].GetRect().y/h == (m_screenH/h))
-			|| (g_pField->IsBlock(m_Pos[i].GetRect().x/h, (m_screenH - m_Pos[i].GetRect().y)/h - 1)))
+        if ((m_Pos[i].GetRect().y == m_screenH)
+            || (g_pField->IsBlock(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y)))
 		{
 			ReturnValue = false;
 			break;
@@ -136,7 +135,7 @@ void CForm::Rotate()
 
         if ((x_newP[i] >= m_screenW) || (x_newP[i] < 0.0f)) return;
         if ((y_newP[i] >= m_screenH) || (y_newP[i] < 0.0f)) return;
-        if (g_pField->IsBlock(x_newP[i]/m_size,(m_screenH - y_newP[i])/m_size - 1)) return;
+        if (g_pField->IsBlock(x_newP[i], y_newP[i])) return;
     }
 
     //update member variables:
@@ -190,9 +189,9 @@ void CForm::Move(int Dir, bool KeyHold)
 			return;
 		}
 		if ((m_Pos[i].GetRect().y/m_size - 1 >= 0) && (m_Pos[i].GetRect().x + 1 <= m_screenW) && //vertical screenborder (right)?
-			(((g_pField->IsBlock(m_Pos[i].GetRect().x/m_size + 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_RIGHT)) //is there a block in the way (right)?
+            (((g_pField->IsBlock(m_Pos[i].GetRect().x+ m_size, m_Pos[i].GetRect().y)) && (Dir == SDLK_RIGHT)) //is there a block in the way (right)?
 			|| ((m_Pos[i].GetRect().x/m_size - 1 >= 0) && (m_Pos[i].GetRect().y/m_size - 1 >= 0) && //vertical screenborder (left)?
-			(g_pField->IsBlock(m_Pos[i].GetRect().x/m_size - 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_LEFT)))) //is there a block in the way (left)?
+            (g_pField->IsBlock(m_Pos[i].GetRect().x- m_size, m_Pos[i].GetRect().y)) && (Dir == SDLK_LEFT)))) //is there a block in the way (left)?
 		{
 			return;
 		}
@@ -204,33 +203,33 @@ void CForm::Move(int Dir, bool KeyHold)
 	{
 		if (KeyHold)
 		{
-			if (m_AutoMove > puffer)
+            if (m_fAutoMove > puffer)
 			{
 				dx =  AutoSpeed * g_pTimer->GetElapsed();
 			}else
 			{
-				m_AutoMove += 300.0f * g_pTimer->GetElapsed();
+                m_fAutoMove += 300.0f * g_pTimer->GetElapsed();
 			}
 		} else if (!KeyHold)
 		{
 			dx = static_cast<float>(m_size);
-			m_AutoMove = 0.0f;
+            m_fAutoMove = 0.0f;
 		}
 	} else if (Dir == SDLK_LEFT)
 	{
 		if (KeyHold)
 		{
-			if (m_AutoMove > puffer)
+            if (m_fAutoMove > puffer)
 			{
 				dx = - AutoSpeed * g_pTimer->GetElapsed();
 			}else
 			{
-				m_AutoMove += 300.0f * g_pTimer->GetElapsed();
+                m_fAutoMove += 300.0f * g_pTimer->GetElapsed();
 			}
 		} else if (!KeyHold)
 		{
 			dx = - static_cast<float>(m_size);
-			m_AutoMove = 0.0f;
+            m_fAutoMove = 0.0f;
 		}
 	}
 

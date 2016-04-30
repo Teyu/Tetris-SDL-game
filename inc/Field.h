@@ -19,7 +19,7 @@ public:
 	void Init(int size);
 	void Render();
 	void Update(int Level);
-	bool IsBlock( int XPix, int YPix); 
+    bool IsBlock( float fXPix, float fYPix);
 	int GetLines() { return m_Lines;}
 	void IncludeForm( CSprite FormPos);
 

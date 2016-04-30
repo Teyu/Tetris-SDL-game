@@ -4,7 +4,7 @@ CT::~CT()
 {
 }
 
-void CT::Reset()
+void CT::ResetPos()
 {
 	for (int i = 0; i < 4; i++)
 	{
