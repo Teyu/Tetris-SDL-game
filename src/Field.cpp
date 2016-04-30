@@ -87,36 +87,15 @@ void CField::Update(int Level)
 }
 
 /****************************************************************************************************************************************************
-return wether stated position has a block 
+return wether stated position has a block, parameters out of range are allowed : returns false (there is no block)
 */
 
 bool CField::IsBlock( float fXPix, float fYPix)
-{ 
-	//legal parameters?
-//TODO: display error message only in debug version
-	/*try{
-		if (XPix < 0)
-		{
-			throw "Tried to attempt Field-Position. XPix Position negative!";
-		} else if (XPix > m_screenW/m_size)
-		{
-			throw  "Tried to attempt Field-Position. XPix Position larger than screen!";
-		}
-
-		if (YPix < 0)
-		{
-			throw "Tried to attempt Field-Position. YPix Position negative!";
-		} else if (YPix > m_screenH/m_size)
-		{
-			throw "Tried to attempt Field-Position. YPix larger than screen!";
-		}
-	}catch(char* msg){
-		cerr << msg << endl;
-
-		//shutdown
-		g_pFramework->Quit();
-		exit(1);
-	}*/
+{
+    if ((fXPix < 0.0f) || (fXPix >= m_screenW) || (fYPix < 0.0f) || (fYPix >= m_screenH))
+    {
+        return false;
+    }
 
     return m_field[int(fXPix/m_size)][int((m_screenH - fYPix)/m_size - 1)];
 }

@@ -131,11 +131,22 @@ void CForm::Rotate()
         x_newP[i] = m_Pos[m_RotPoint].GetRect().x + x_RotP;
         y_newP[i] = m_Pos[m_RotPoint].GetRect().y + y_RotP;
 
-    //verify if there is enough space to rotate
+    //verify if a lying block is blocking off the rotation
 
-        if ((x_newP[i] >= m_screenW) || (x_newP[i] < 0.0f)) return;
-        if ((y_newP[i] >= m_screenH) || (y_newP[i] < 0.0f)) return;
         if (g_pField->IsBlock(x_newP[i], y_newP[i])) return;
+
+    //set back form if screenborders are blocking off the rotation, then reset loop
+
+        if ((x_newP[i] >= m_screenW) || (x_newP[i] < 0.0f))
+        {
+            Move(float(x_newP[i] < 0.0f ? m_size : -m_size),0.0f);
+            i = - 1;
+        }
+        else if ((y_newP[i] >= m_screenH) || (y_newP[i] < 0.0f))
+        {
+            Move(0.0f,float(y_newP[i] < 0.0f ? m_size : -m_size));
+            i = - 1;
+        }
     }
 
     //update member variables:
