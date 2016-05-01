@@ -146,9 +146,9 @@ void CFramework::Flip()
       }
 
     SDL_Surface *text;
-	stringstream s; 
-	s << g_pPlayer->GetPoints();
-	text = TTF_RenderText_Solid(font, s.str().c_str(), text_color);
+    stringstream sp;
+    sp << g_pPlayer->GetPoints();
+    text = TTF_RenderText_Solid(font, sp.str().c_str(), text_color);
 	Pos_points.x += Pos_points.w; 
 	Pos_points.w = text->w;
     Pos_points.h = text->h;
@@ -156,6 +156,18 @@ void CFramework::Flip()
 	if (SDL_BlitSurface(text, NULL, m_pScreen, &Pos_points) != 0)
       { 
 		  cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
+      }
+
+    stringstream sl;
+    sl << g_pPlayer->GetLevel();
+    text = TTF_RenderText_Solid(font, sl.str().c_str(), text_color);
+    Pos_level.x += Pos_level.w;
+    Pos_level.w = text->w;
+    Pos_level.h = text->h;
+
+    if (SDL_BlitSurface(text, NULL, m_pScreen, &Pos_level) != 0)
+      {
+          cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
       }
 
 	//dividing line

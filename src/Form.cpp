@@ -96,7 +96,7 @@ bool CForm::Fall()
             //necessary so that one is still able to move a form horizontally that reached its end of fall
 			m_Pos[i].SetPos(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y - m_size);
 
-			g_pField->IncludeForm(m_Pos[i]);
+            g_pField->IncludeBlock(m_Pos[i]);
 		}
 		if (m_FastFallingPoints != 0)
 			g_pPlayer->IncreasePoints(m_FastFallingPoints -1); 

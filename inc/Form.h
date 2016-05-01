@@ -7,6 +7,7 @@
 #include "Timer.h"
 #include "Field.h"
 #include <array>
+
 using namespace std;
 
 class CForm 

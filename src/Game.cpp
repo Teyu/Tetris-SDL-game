@@ -21,10 +21,9 @@ void CGame::Init()
 	time_t t;
 	srand( time(&t) );
 
-	m_Level = 0;
 	spawnForm();
 
-	g_pField->Init(m_pForm->GetSize());
+    g_pField->Init(m_pForm->GetSize());
 
 	m_bGameRun = true;
 
@@ -104,11 +103,7 @@ void CGame::Run()
             m_bKeyLock_Fall = true;
         }
 
-		g_pField->Update(m_Level);
-		if (g_pField->GetLines()/10 == (m_Level + 1))
-		{
-			m_Level++; 
-		}
+        g_pField->Update();
 
 		m_pForm->Render();
 		g_pFramework->Flip();
@@ -190,5 +185,5 @@ void CGame::spawnForm()
 
 			//start tempo = 30
 			//each level + 5
-			m_pForm->Init(30.0f + 5*m_Level);
+            m_pForm->Init(30.0f + 5*g_pPlayer->GetLevel());
 }

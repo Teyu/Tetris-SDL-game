@@ -7,6 +7,9 @@ class CSprite
 {
 public: 
 	CSprite();
+    CSprite(const CSprite& newSprite) :
+        m_pScreen(newSprite.m_pScreen), m_pImage(newSprite.m_pImage), m_Rect(newSprite.m_Rect), m_sImageFile(newSprite.m_sImageFile)
+    {}
 	~CSprite();
 
 	void Load (const string sFilename);

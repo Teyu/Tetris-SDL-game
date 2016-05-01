@@ -10,28 +10,27 @@
 
 using namespace std;
 
-#define g_pField CField::Get() //pointer to single entity of CField
+#define g_pField CField::Get(10u, 20u) //pointer to single entity of CField
 
 class CField : public TSingleton<CField>
 {
 public:
-	CField();
-	void Init(int size);
+    CField(unsigned const fieldW, unsigned const fieldH);
+    void Init(unsigned const Bsize);
 	void Render();
-	void Update(int Level);
+    void Update();
     bool IsBlock( float fXPix, float fYPix);
-	int GetLines() { return m_Lines;}
-	void IncludeForm( CSprite FormPos);
+    void IncludeBlock( CSprite& Block);
 
 private:
-	int m_size;
-	int m_screenW;
-	int m_screenH;
-	bool m_field[300/15][450/15]; 
-	CSprite m_fieldSprites[300/15][450/15]; 
-	int m_Lines;
 
-	void EraseLine(int Line);
+    unsigned const m_fieldW;
+    unsigned const m_fieldH;
+    unsigned m_Bsize;
+
+    vector<vector<CSprite*>> m_field;
+
+    void EraseLine(unsigned Line);
 };
 
 #endif

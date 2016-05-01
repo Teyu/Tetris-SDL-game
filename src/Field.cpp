@@ -4,7 +4,7 @@
 constructor
 */
 
-CField::CField()
+CField::CField(const unsigned fieldW, const unsigned fieldH) : m_fieldW(fieldW), m_fieldH(fieldH)
 {
 }
 
@@ -12,21 +12,20 @@ CField::CField()
 initialising
 */
 
-void CField::Init(int size)
+void CField::Init(unsigned const Bsize)
 {
-	m_size = size; //hight of a tetris block
-	m_screenW = 10*m_size;
-	m_screenH = 20*m_size;
-	m_Lines = 0;
+    m_Bsize = Bsize;
 
-	//initialising m_field (at the start of the game no blocks are lying on the field yet)
-	for (int i=0; i < m_screenW/m_size ; i++)
-	{
-		for (int j=0; j < m_screenH/m_size; j++)
-		{
-			m_field[i][j] = false;
-		}
-	}
+    //initialising m_field
+    m_field.resize(m_fieldW);
+    for (size_t i=0; i < m_fieldW ; i++)
+        {
+            m_field[i].resize(m_fieldH);
+            for (size_t j=0; j < m_fieldH; j++)
+            {
+                m_field[i][j] = nullptr;
+            }
+        }
 }
 
 /****************************************************************************************************************************************************
@@ -35,55 +34,41 @@ render lying blocks
 
 void CField::Render()
 {
-	for (int i=0; i < m_screenW/m_size ; i++)
-	{
-		for (int j=0; j < m_screenH/m_size; j++)
-		{
-			if (m_field[i][j] == true)
-			{
-				m_fieldSprites[i][j].Render();
-			}
-		}
-	}
+    for (size_t i=0; i < m_fieldW ; i++)
+    {
+        for (size_t j=0; j < m_fieldH; j++)
+        {
+            if (m_field[i][j] != nullptr)
+            {
+                m_field[i][j]->Render();
+            }
+        }
+    }
 
 }
 
 /****************************************************************************************************************************************************
-update the field
+update the field: delete full lines
 */
 
-void CField::Update(int Level)
+void CField::Update()
 {
-	//delete full lines
-	int LineCounter = 0;
-	int LineAmount = 0;
+    unsigned DelLines = 0;
 
-	for (int j =  0; j < m_screenH/m_size; j++)
-	{
-		for (int k = 0; k < m_screenW/m_size; k++)
-		{
-			if (m_field[k][(m_screenH/m_size - j) - 1] == true)
-				LineCounter++;
-		}
-		if (LineCounter == (m_screenW/m_size))
-		{
-			EraseLine((m_screenH/m_size - j) - 1);
-			m_Lines++;
-			LineAmount++;
-		}
-		LineCounter = 0;
-	}
+    for (size_t j =  0; j < m_fieldH; j++)
+    {
+        for (size_t k = 0; k < m_fieldW; k++)
+        {
+           if (m_field[k][j] == nullptr)
+               goto continue_j;
+        }
+        EraseLine(j);
+        DelLines++;
 
-	//the player gains points depending on the amount of deleted lines and the current level
-	if (LineAmount == 1)
-		g_pPlayer->IncreasePoints(40*(Level+1));
-	if (LineAmount == 2)
-		g_pPlayer->IncreasePoints(100*(Level+1));
-	if (LineAmount == 3)
-		g_pPlayer->IncreasePoints(300*(Level+1));
-	if (LineAmount == 4)
-		g_pPlayer->IncreasePoints(1200*(Level+1));
+        continue_j:;
+    }
 
+    g_pPlayer->AddDelLines(DelLines);
 }
 
 /****************************************************************************************************************************************************
@@ -92,50 +77,40 @@ return wether stated position has a block, parameters out of range are allowed :
 
 bool CField::IsBlock( float fXPix, float fYPix)
 {
-    if ((fXPix < 0.0f) || (fXPix >= m_screenW) || (fYPix < 0.0f) || (fYPix >= m_screenH))
-    {
+    if ((fXPix < 0.0f) || (fXPix >= m_fieldW*m_Bsize) || (fYPix < 0.0f) || (fYPix >= m_fieldH*m_Bsize))
         return false;
-    }
 
-    return m_field[int(fXPix/m_size)][int((m_screenH - fYPix)/m_size - 1)];
+    return (m_field[unsigned(fXPix/m_Bsize)][unsigned(fYPix/m_Bsize)] == nullptr) ? false : true;
 }
 
 /****************************************************************************************************************************************************
-include new form into field of lying blocks
+include block into field of lying blocks
 */
 
-void CField::IncludeForm(CSprite FormPos)
+void CField::IncludeBlock(CSprite& Block)
 {
-	int i = FormPos.GetRect().x/m_size;
-	int j = (m_screenH - FormPos.GetRect().y)/m_size - 1;
-
-	//loading an image file initialises the block position with default values 
-	m_fieldSprites[i][j].Load(FormPos.GetImageFile());
-	//set the block position
-	m_fieldSprites[i][j].SetPos(FormPos.GetRect().x, FormPos.GetRect().y);
-
-	m_field[i][j] = true;
+    m_field[Block.GetRect().x/m_Bsize][Block.GetRect().y/m_Bsize] = new CSprite(Block);
 }
 
 /****************************************************************************************************************************************************
 delete a full line of blocks
 */
 
-void CField::EraseLine(int Line)
+void CField::EraseLine(unsigned Line)
 {
-	//overwrite a line with its upper line starting with the regarding line to be deleted
-	for (int i = 0; i < m_screenW/m_size; i++)
-	{		
-		for (int j = Line; j < m_screenH/m_size - 1; j++)
-		{
-			m_field[i][j] = m_field[i][j+1];
-			if (m_field[i][j] == true)
-			{
-				SDL_Rect tmp = m_fieldSprites[i][j+1].GetRect();
-				m_fieldSprites[i][j].Load(m_fieldSprites[i][j+1].GetImageFile());
-				m_fieldSprites[i][j].SetPos(tmp.x, tmp.y + m_size);
-			}
-		}
-		m_field[i][m_screenH/m_size -1] = false;
-	}
+    //overwrite a line with its upper line starting with the regarding line to be deleted
+    for (size_t i = 0; i < m_fieldW; i++)
+        {
+            for (size_t j = Line; j > 1; j--) //y-axis is inverted
+            {
+                m_field[i][j] = m_field[i][j-1];
+                if (m_field[i][j] != nullptr)
+                {
+                    SDL_Rect tmp = m_field[i][j]->GetRect();
+                    m_field[i][j]->SetPos(tmp.x, tmp.y + m_Bsize);
+                }
+            }
+            delete(m_field[i][0]);
+            m_field[i][0] = nullptr;
+        }
 }
