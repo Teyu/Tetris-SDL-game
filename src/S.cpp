@@ -4,7 +4,7 @@ CS::~CS()
 {
 }
 
-void CS::Reset()
+void CS::ResetPos()
 {
 	for (int i = 0; i < 4; i++)
 	{

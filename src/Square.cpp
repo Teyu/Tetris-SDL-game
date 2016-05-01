@@ -4,7 +4,7 @@ CSquare::~CSquare()
 {
 }
 
-void CSquare::Reset()
+void CSquare::ResetPos()
 {
 	for (int i = 0; i < 4; i++)
 	{

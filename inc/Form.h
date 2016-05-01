@@ -16,7 +16,7 @@ public:
     virtual ~CForm();
 	void Render();
 	void Init(float fTempo); 
-	virtual void Reset(); //to be overwritten
+    virtual void ResetPos(); //to be overwritten
 	bool Fall();
 	void Rotate();
 	void FastDown(bool bStart);
@@ -32,7 +32,7 @@ protected:
 	int m_screenH;
 	bool m_bIsFallingFast;
 	int m_FastFallingPoints;
-	float m_AutoMove; 
+    float m_fAutoMove;
 	CSprite m_Pos[4]; 
 
 private:
@@ -40,7 +40,6 @@ private:
 
 	float m_fTempo;
 	float m_fFastTempo;
-
 };
 
 #endif

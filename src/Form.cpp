@@ -8,7 +8,7 @@ CForm::CForm() : m_fXPos(0.0f), m_fYPos(0.0f),
     m_RotPoint(0), m_size(0),
     m_screenW(0), m_screenH(0),
     m_bIsFallingFast(false), m_FastFallingPoints(0),
-    m_AutoMove(0.0f),
+    m_fAutoMove(0.0f),
     m_fTempo(0.0f), m_fFastTempo(0.0f)
 {
 }
@@ -28,7 +28,7 @@ initialising
 void CForm::Init(float fTempo)
 {
 	//set start position
-	Reset();
+    ResetPos();
 
 	m_size = m_Pos[0].GetRect().h;
 	m_screenW = 10* m_size;
@@ -37,7 +37,7 @@ void CForm::Init(float fTempo)
 
 	m_bIsFallingFast = false;
 	m_FastFallingPoints = 0;
-	m_AutoMove = 0.0f;
+    m_fAutoMove = 0.0f;
 	m_fFastTempo = 600.0f;
 
 	m_RotPoint = 1; 
@@ -47,7 +47,7 @@ void CForm::Init(float fTempo)
 set start position (to be overwritten)
 */
 
-void CForm::Reset()
+void CForm::ResetPos()
 {
 }
 
@@ -75,14 +75,13 @@ bool CForm::Fall()
 	float dy = m_fTempo * g_pTimer->GetElapsed();
 	Move(0.0f, dy);
 
-	bool ReturnValue = true; 
-	int h = m_size; 
+    bool ReturnValue = true;
 
-	//verify if the end of fall is reached
+    //verify if the bottom screen border is reached
 	for (int i = 0; i < 4; i++)
 	{
-		if ((m_Pos[i].GetRect().y/h == (m_screenH/h))
-			|| (g_pField->IsBlock(m_Pos[i].GetRect().x/h, (m_screenH - m_Pos[i].GetRect().y)/h - 1)))
+        if ((m_Pos[i].GetRect().y == m_screenH)
+            || (g_pField->IsBlock(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y)))
 		{
 			ReturnValue = false;
 			break;
@@ -94,7 +93,7 @@ bool CForm::Fall()
 		for (int i = 0; i < 4; i++)
 		{
 			//reset position if the form didn't fall. 
-			//necessary so that one is still able to move a form that reached its end of fall
+            //necessary so that one is still able to move a form horizontally that reached its end of fall
 			m_Pos[i].SetPos(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y - m_size);
 
 			g_pField->IncludeForm(m_Pos[i]);
@@ -114,74 +113,50 @@ rotate form if possible
 
 void CForm::Rotate()
 {
-	//difference of the blocks to the rotation point
-	int dx[4]; 
-	int dy[4];
+    float x_newP[4];
+    float y_newP[4];
 
-	//verify if there is enough space to rotate
-	for (int i = 0; i < 4; i++)
-	{
-		if ((m_Pos[i].GetRect().x == m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y;
-			dy[i] = dx[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0)) //end of screen?
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size))) //block?
-				return;
-		} else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y == m_Pos[m_RotPoint].GetRect().y))
-		{
-			dy[i] = m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x;
-			dx[i] = -dy[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0))
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size)))
-				return;
-		}else if ((m_Pos[i].GetRect().x == m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y > m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y;
-			dy[i] = dx[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y + dy[i] < 0))
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size)))
-				return;
-		}else if ((m_Pos[i].GetRect().x < m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y == m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = m_Pos[m_RotPoint].GetRect().x - m_Pos[i].GetRect().x;
-			dy[i] = -dx[i];
-			if (((m_Pos[i].GetRect().x + dx[i] >= m_screenW) || (m_Pos[i].GetRect().x + dx[i] < 0) || (m_Pos[i].GetRect().y+ dy[i] < 0))
-				|| (g_pField->IsBlock((m_Pos[i].GetRect().x + dx[i])/m_size, (m_screenH - (m_Pos[i].GetRect().y + dy[i]))/m_size)))
-				return;
-		}else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = 0;
-			dy[i] = (m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y);
-		} else if ((m_Pos[i].GetRect().x > m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y > m_Pos[m_RotPoint].GetRect().y))
-		{
-			dy[i] = 0;
-			dx[i] = (m_Pos[m_RotPoint].GetRect().x - m_Pos[i].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y);
-		} else if ((m_Pos[i].GetRect().x < m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y > m_Pos[m_RotPoint].GetRect().y))
-		{
-			dx[i] = 0;
-			dy[i] = (m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y - m_Pos[i].GetRect().y);
-		} else if ((m_Pos[i].GetRect().x < m_Pos[m_RotPoint].GetRect().x) && (m_Pos[i].GetRect().y < m_Pos[m_RotPoint].GetRect().y))
-		{
-			dy[i] = 0;
-			dx[i] = (m_Pos[m_RotPoint].GetRect().x - m_Pos[i].GetRect().x) + (m_Pos[m_RotPoint].GetRect().y- m_Pos[i].GetRect().y);
-		}
-		else
-		{
-			dx[i] = 0;
-			dy[i] = 0;
-		}
-	}
-	
-	//rotate
-	for (int i = 0; i < 4; i++)
-	{
-		m_Pos[i].SetPos(m_Pos[i].GetRect().x + dx[i], m_Pos[i].GetRect().y + dy[i]);
-	}
+    for (int i = 0; i < 4; i++)
+    {
+        //x-axis and y-axis values of m_Pos if m_RotPoint was (0,0)
+        float x_RotP = m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x;
+        float y_RotP = m_Pos[i].GetRect().y - m_Pos[m_RotPoint].GetRect().y;
 
-	//convertion to float otherwise the form wouldn't be falling while rotating
-	m_fXPos += static_cast<float>(dx[0]);
-	m_fYPos += static_cast<float>(dy[0]);
+        //90°-rotation of (x_RotP, y_RotP) at m_RotPoint
+        float x = x_RotP;
+        float y = y_RotP;
+        x_RotP = - y;
+        y_RotP = x;
+
+        x_newP[i] = m_Pos[m_RotPoint].GetRect().x + x_RotP;
+        y_newP[i] = m_Pos[m_RotPoint].GetRect().y + y_RotP;
+
+    //verify if a lying block is blocking off the rotation
+
+        if (g_pField->IsBlock(x_newP[i], y_newP[i])) return;
+
+    //set back form if screenborders are blocking off the rotation, then reset loop
+
+        if ((x_newP[i] >= m_screenW) || (x_newP[i] < 0.0f))
+        {
+            Move(float(x_newP[i] < 0.0f ? m_size : -m_size),0.0f);
+            i = - 1;
+        }
+        else if ((y_newP[i] >= m_screenH) || (y_newP[i] < 0.0f))
+        {
+            Move(0.0f,float(y_newP[i] < 0.0f ? m_size : -m_size));
+            i = - 1;
+        }
+    }
+
+    //update member variables:
+    m_fXPos += (x_newP[0] - m_Pos[0].GetRect().x);
+    m_fYPos += (y_newP[0] - m_Pos[0].GetRect().y);
+
+    for (int i = 0; i < 4; i++)
+    {
+        m_Pos[i].SetPos(x_newP[i], y_newP[i]);
+    }
 }
 
 /****************************************************************************************************************************************************
@@ -225,9 +200,9 @@ void CForm::Move(int Dir, bool KeyHold)
 			return;
 		}
 		if ((m_Pos[i].GetRect().y/m_size - 1 >= 0) && (m_Pos[i].GetRect().x + 1 <= m_screenW) && //vertical screenborder (right)?
-			(((g_pField->IsBlock(m_Pos[i].GetRect().x/m_size + 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_RIGHT)) //is there a block in the way (right)?
+            (((g_pField->IsBlock(m_Pos[i].GetRect().x+ m_size, m_Pos[i].GetRect().y)) && (Dir == SDLK_RIGHT)) //is there a block in the way (right)?
 			|| ((m_Pos[i].GetRect().x/m_size - 1 >= 0) && (m_Pos[i].GetRect().y/m_size - 1 >= 0) && //vertical screenborder (left)?
-			(g_pField->IsBlock(m_Pos[i].GetRect().x/m_size - 1, (m_screenH - m_Pos[i].GetRect().y)/m_size - 1)) && (Dir == SDLK_LEFT)))) //is there a block in the way (left)?
+            (g_pField->IsBlock(m_Pos[i].GetRect().x- m_size, m_Pos[i].GetRect().y)) && (Dir == SDLK_LEFT)))) //is there a block in the way (left)?
 		{
 			return;
 		}
@@ -239,33 +214,33 @@ void CForm::Move(int Dir, bool KeyHold)
 	{
 		if (KeyHold)
 		{
-			if (m_AutoMove > puffer)
+            if (m_fAutoMove > puffer)
 			{
 				dx =  AutoSpeed * g_pTimer->GetElapsed();
 			}else
 			{
-				m_AutoMove += 300.0f * g_pTimer->GetElapsed();
+                m_fAutoMove += 300.0f * g_pTimer->GetElapsed();
 			}
 		} else if (!KeyHold)
 		{
 			dx = static_cast<float>(m_size);
-			m_AutoMove = 0.0f;
+            m_fAutoMove = 0.0f;
 		}
 	} else if (Dir == SDLK_LEFT)
 	{
 		if (KeyHold)
 		{
-			if (m_AutoMove > puffer)
+            if (m_fAutoMove > puffer)
 			{
 				dx = - AutoSpeed * g_pTimer->GetElapsed();
 			}else
 			{
-				m_AutoMove += 300.0f * g_pTimer->GetElapsed();
+                m_fAutoMove += 300.0f * g_pTimer->GetElapsed();
 			}
 		} else if (!KeyHold)
 		{
 			dx = - static_cast<float>(m_size);
-			m_AutoMove = 0.0f;
+            m_fAutoMove = 0.0f;
 		}
 	}
 

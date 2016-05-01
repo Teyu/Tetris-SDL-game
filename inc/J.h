@@ -6,7 +6,7 @@
 class CJ: public CForm
 {
 public:
-    virtual void Reset();
+    virtual void ResetPos();
     virtual ~CJ();
 };
 
