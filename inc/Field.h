@@ -22,6 +22,9 @@ public:
     bool IsBlock( float fXPix, float fYPix);
     void IncludeBlock( CSprite& Block);
 
+    unsigned const GetFieldW() {return m_fieldW;}
+    unsigned const GetFieldH() {return m_fieldH;}
+
 private:
 
     unsigned const m_fieldW;

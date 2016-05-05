@@ -4,12 +4,16 @@
 constructor
 */
 
-CForm::CForm() : m_fXPos(0.0f), m_fYPos(0.0f),
-    m_RotPoint(0), m_size(0),
-    m_screenW(0), m_screenH(0),
-    m_bIsFallingFast(false), m_FastFallingPoints(0),
-    m_fAutoMove(0.0f),
-    m_fTempo(0.0f), m_fFastTempo(0.0f)
+CForm::CForm() :
+    m_fXPos(0.0f), m_fYPos(0.0f),
+
+    m_size(0), m_fieldW(0), m_fieldH(0),
+
+    m_RotPoint(1),
+
+    m_fFallingSpeed(0.0f), m_fFallingFastSpeed(630.0f), m_fDistFastDown(0.0f),
+    m_fAutoMoveSpeed(500.0f)
+
 {
 }
 
@@ -25,30 +29,18 @@ CForm::~CForm()
 initialising
 */
 
-void CForm::Init(float fTempo)
+void CForm::Init(float fFallingSpeed)
 {
-	//set start position
-    ResetPos();
+    m_fFallingSpeed = fFallingSpeed;
 
-	m_size = m_Pos[0].GetRect().h;
-	m_screenW = 10* m_size;
-	m_screenH = 20*m_size;
-	m_fTempo = fTempo;
+    loadBlockImage();
+    m_size = m_Blocks[0].GetRect().h;
+    m_fieldW = g_pField->GetFieldW()* m_size;
+    m_fieldH = g_pField->GetFieldH()* m_size;
 
-	m_bIsFallingFast = false;
-	m_FastFallingPoints = 0;
-    m_fAutoMove = 0.0f;
-	m_fFastTempo = 600.0f;
-
-	m_RotPoint = 1; 
-}
-
-/****************************************************************************************************************************************************
-set start position (to be overwritten)
-*/
-
-void CForm::ResetPos()
-{
+    setStartPos();
+    m_fXPos = m_Blocks[0].GetRect().x;
+    m_fYPos = m_Blocks[0].GetRect().y;
 }
 
 /****************************************************************************************************************************************************
@@ -59,50 +51,40 @@ void CForm::Render()
 {
 	for (int i=0; i < 4; i++)
 	{
-		m_Pos[i].Render();
+        m_Blocks[i].Render();
 	}
 
 	g_pField->Render(); 
 }
 
 /****************************************************************************************************************************************************
-form is falling down one block with defined speed.
-returns true if it actually fell down and false if the end of fall is reached.	
+form is falling down one block with either normal (bFast = false) or fast (bFast = true) speed.
+returns true if it succesfully fell down and false if it was not able to fall down.
 */
 
-bool CForm::Fall()
+bool CForm::Fall(bool bFast)
 {
-	float dy = m_fTempo * g_pTimer->GetElapsed();
-	Move(0.0f, dy);
+    float dy = (bFast ? m_fFallingFastSpeed : m_fFallingSpeed) * g_pTimer->GetElapsed();
+    Move(0.0f, dy);
 
-    bool ReturnValue = true;
-
-    //verify if the bottom screen border is reached
 	for (int i = 0; i < 4; i++)
 	{
-        if ((m_Pos[i].GetRect().y == m_screenH)
-            || (g_pField->IsBlock(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y)))
-		{
-			ReturnValue = false;
-			break;
+        if ((m_Blocks[i].GetRect().y == m_fieldH) || (g_pField->IsBlock(m_Blocks[i].GetRect().x, m_Blocks[i].GetRect().y)))
+        {
+            Move(0.0f, -dy);
+
+            //TO CGAME...
+            for (int i = 0; i < 4; i++)
+                g_pField->IncludeBlock(m_Blocks[i]);
+
+            g_pPlayer->IncreasePoints(m_fDistFastDown/m_size);
+            //...TO CGAME
+
+            return false;
 		}
-	}
+    }
 
-	if (ReturnValue == false)
-	{	
-		for (int i = 0; i < 4; i++)
-		{
-			//reset position if the form didn't fall. 
-            //necessary so that one is still able to move a form horizontally that reached its end of fall
-			m_Pos[i].SetPos(m_Pos[i].GetRect().x, m_Pos[i].GetRect().y - m_size);
-
-            g_pField->IncludeBlock(m_Pos[i]);
-		}
-		if (m_FastFallingPoints != 0)
-			g_pPlayer->IncreasePoints(m_FastFallingPoints -1); 
-
-		return false; 
-	}
+    m_fDistFastDown = (bFast ? m_fDistFastDown + dy : 0);
 
 	return true;
 }
@@ -118,162 +100,90 @@ void CForm::Rotate()
 
     for (int i = 0; i < 4; i++)
     {
-        //x-axis and y-axis values of m_Pos if m_RotPoint was (0,0)
-        float x_RotP = m_Pos[i].GetRect().x - m_Pos[m_RotPoint].GetRect().x;
-        float y_RotP = m_Pos[i].GetRect().y - m_Pos[m_RotPoint].GetRect().y;
+        //x-axis and y-axis values of m_Blocks if m_RotPoint was (0,0)
+        float x_RelRotP = m_Blocks[i].GetRect().x - m_Blocks[m_RotPoint].GetRect().x;
+        float y_RelRotP = m_Blocks[i].GetRect().y - m_Blocks[m_RotPoint].GetRect().y;
 
-        //90°-rotation of (x_RotP, y_RotP) at m_RotPoint
-        float x = x_RotP;
-        float y = y_RotP;
-        x_RotP = - y;
-        y_RotP = x;
+        //90°-rotation of (x_RelRotP, y_RelRotP) at m_RotPoint
+        float x = x_RelRotP;
+        float y = y_RelRotP;
+        x_RelRotP = - y;
+        y_RelRotP = x;
 
-        x_newP[i] = m_Pos[m_RotPoint].GetRect().x + x_RotP;
-        y_newP[i] = m_Pos[m_RotPoint].GetRect().y + y_RotP;
-
-    //verify if a lying block is blocking off the rotation
+        x_newP[i] = m_Blocks[m_RotPoint].GetRect().x + x_RelRotP;
+        y_newP[i] = m_Blocks[m_RotPoint].GetRect().y + y_RelRotP;
 
         if (g_pField->IsBlock(x_newP[i], y_newP[i])) return;
 
-    //set back form if screenborders are blocking off the rotation, then reset loop
+        //set back form if screenborders are blocking off the rotation, then reset loop
 
-        if ((x_newP[i] >= m_screenW) || (x_newP[i] < 0.0f))
+        if ((x_newP[i] >= m_fieldW) || (x_newP[i] < 0.0f))
         {
-            Move(float(x_newP[i] < 0.0f ? m_size : -m_size),0.0f);
+            Move(float(x_newP[i] < 0.0f ? m_size : -m_size), 0.0f);
             i = - 1;
         }
-        else if ((y_newP[i] >= m_screenH) || (y_newP[i] < 0.0f))
+        else if ((y_newP[i] >= m_fieldH) || (y_newP[i] < 0.0f))
         {
             Move(0.0f,float(y_newP[i] < 0.0f ? m_size : -m_size));
             i = - 1;
         }
     }
 
-    //update member variables:
-    m_fXPos += (x_newP[0] - m_Pos[0].GetRect().x);
-    m_fYPos += (y_newP[0] - m_Pos[0].GetRect().y);
+    m_fXPos += (x_newP[0] - m_Blocks[0].GetRect().x);
+    m_fYPos += (y_newP[0] - m_Blocks[0].GetRect().y);
 
     for (int i = 0; i < 4; i++)
     {
-        m_Pos[i].SetPos(x_newP[i], y_newP[i]);
+        m_Blocks[i].SetPos(x_newP[i], y_newP[i]);
     }
-}
-
-/****************************************************************************************************************************************************
-form is falling down at a higher speed if regarding button is pressed
-*/
-
-void CForm::FastDown(bool bStart)
-{
-	if ((bStart) && (!m_bIsFallingFast))
-	{
-		float tmp = m_fTempo;
-		m_fTempo = m_fFastTempo;
-		m_fFastTempo = tmp;
-		m_bIsFallingFast = true;
-	}
-
-	if ((!bStart) && (m_bIsFallingFast))
-	{
-		float tmp = m_fFastTempo;
-		m_fFastTempo = m_fTempo;
-		m_fTempo = tmp; 
-		m_bIsFallingFast = false;
-	}
 }
 
 /****************************************************************************************************************************************************
 move form one size of a block to the left or right depending on which button has been pressed
 */
 
-void CForm::Move(int Dir, bool KeyHold)
+void CForm::Move(int Dir, bool bAutofire)
 {
-	int puffer = 80;
-	float AutoSpeed = 500.0f;
-
-	//verify if there is enough space
-	for (int i = 0; i < 4; i++)
-	{
-		if (((m_Pos[i].GetRect().x >= (m_screenW - m_size)) && (Dir == SDLK_RIGHT)) 
-			|| ((m_Pos[i].GetRect().x <= 0) && (Dir == SDLK_LEFT))) //horizontal screenborder?
-		{
-			return;
-		}
-		if ((m_Pos[i].GetRect().y/m_size - 1 >= 0) && (m_Pos[i].GetRect().x + 1 <= m_screenW) && //vertical screenborder (right)?
-            (((g_pField->IsBlock(m_Pos[i].GetRect().x+ m_size, m_Pos[i].GetRect().y)) && (Dir == SDLK_RIGHT)) //is there a block in the way (right)?
-			|| ((m_Pos[i].GetRect().x/m_size - 1 >= 0) && (m_Pos[i].GetRect().y/m_size - 1 >= 0) && //vertical screenborder (left)?
-            (g_pField->IsBlock(m_Pos[i].GetRect().x- m_size, m_Pos[i].GetRect().y)) && (Dir == SDLK_LEFT)))) //is there a block in the way (left)?
-		{
-			return;
-		}
-	}
+    if ((Dir != SDLK_RIGHT) && (Dir != SDLK_LEFT))
+        return;
 
 	float dx = 0.0f; 
+    if (bAutofire)
+    {
+        dx = (float) (Dir == SDLK_RIGHT ? 1 : -1) * m_fAutoMoveSpeed * g_pTimer->GetElapsed();
 
-	if (Dir == SDLK_RIGHT)
-	{
-		if (KeyHold)
-		{
-            if (m_fAutoMove > puffer)
-			{
-				dx =  AutoSpeed * g_pTimer->GetElapsed();
-			}else
-			{
-                m_fAutoMove += 300.0f * g_pTimer->GetElapsed();
-			}
-		} else if (!KeyHold)
-		{
-			dx = static_cast<float>(m_size);
-            m_fAutoMove = 0.0f;
-		}
-	} else if (Dir == SDLK_LEFT)
-	{
-		if (KeyHold)
-		{
-            if (m_fAutoMove > puffer)
-			{
-				dx = - AutoSpeed * g_pTimer->GetElapsed();
-			}else
-			{
-                m_fAutoMove += 300.0f * g_pTimer->GetElapsed();
-			}
-		} else if (!KeyHold)
-		{
-			dx = - static_cast<float>(m_size);
-            m_fAutoMove = 0.0f;
-		}
-	}
+    } else
+    {
+        dx = (float) (Dir == SDLK_RIGHT ? 1 : -1) * m_size;
+    }
 
 	Move(dx, 0.0f);
+
+    //verify if there is enough space
+    for (int i = 0; i < 4; i++)
+    {
+        if ((m_Blocks[i].GetRect().x == m_fieldW) || (m_Blocks[i].GetRect().x < 0) ||
+                (g_pField->IsBlock(m_Blocks[i].GetRect().x, m_Blocks[i].GetRect().y)))
+        {
+            Move(-dx, 0.0f);
+            return;
+        }
+    }
 }
 
 /****************************************************************************************************************************************************
-move form by vector (dx, dy)
+move form blockwise by vector (dx, dy)
 */
 
 void CForm::Move(float fdx, float fdy)
 {
 	m_fXPos += fdx;
 	m_fYPos += fdy;
-	//blockwise movement
-	int x = static_cast<int>(m_fXPos) - static_cast<int>(m_fXPos)%m_size;
-	int y = static_cast<int>(m_fYPos) - static_cast<int>(m_fYPos)%m_size;
 
-	SDL_Rect tmp = m_Pos[0].GetRect();
-	for (int i = 0; i < 4; i++)
-	{
-		x += m_Pos[i].GetRect().x - tmp.x;
-		y += m_Pos[i].GetRect().y - tmp.y;
-		tmp = m_Pos[i].GetRect();
+    //blockwise movement
+    int dx = (static_cast<int>(m_fXPos) - static_cast<int>(m_fXPos)%m_size) - m_Blocks[0].GetRect().x;
+    int dy = (static_cast<int>(m_fYPos) - static_cast<int>(m_fYPos)%m_size) - m_Blocks[0].GetRect().y;
 
-		m_Pos[i].SetPos( x, y); 
-
-		if (((m_bIsFallingFast) && (i==0)) && ((m_Pos[i].GetRect().y - tmp.y)/m_size != 0)) 
-		{
-			m_FastFallingPoints += (m_Pos[i].GetRect().y - tmp.y)/m_size;
-		} else if (!m_bIsFallingFast)
-		{
-			m_FastFallingPoints = 0;
-		}
-	}
+    for (size_t i = 0; i < 4; i++ )
+        m_Blocks[i].SetPos(m_Blocks[i].GetRect().x + dx, m_Blocks[i].GetRect().y + dy);
 }

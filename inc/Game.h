@@ -2,13 +2,7 @@
 #define GAME_H
 
 #include "Framework.h"
-#include "Bar.h"
-#include "Square.h"
-#include "L.h"
-#include "J.h"
-#include "Z.h"
-#include "S.h"
-#include "T.h"
+#include "Form.h"
 #include <ctime>
 #include <cstdlib>
 
@@ -33,6 +27,10 @@ private:
 	bool m_bKeyLock_Move;
 	bool m_bKeyLock_Rotate;
     bool m_bKeyLock_Fall;
+
+    float m_fAutoMoveCount_l;
+    float m_fAutoMoveCount_r;
+    const float buffer = 0.25f;
 };
 
 #endif

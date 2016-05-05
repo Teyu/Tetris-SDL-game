@@ -46,18 +46,6 @@ void CGame::Run()
 		g_pFramework->Update();
 		g_pFramework->Clear();
 
-		//ProcessFallFaster
-        if (g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == false))
-		{
-			m_pForm->FastDown(true); //autofire
-        }else if (!g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == true))
-        {
-            m_bKeyLock_Fall = false;
-        }
-        else{
-            m_pForm->FastDown(false);
-		}
-			
 		//ProcessRotate
 		if ((g_pFramework->KeyDown(SDLK_UP)) && (m_bKeyLock_Rotate == false) && (m_FormKind != Square))
 		{
@@ -68,11 +56,19 @@ void CGame::Run()
 
 		//ProcessMove
 		if ((g_pFramework->KeyDown(SDLK_RIGHT)) && (m_bKeyLock_Move == true)) //autofire
-		{
-			m_pForm->Move(SDLK_RIGHT, true);
+        {
+            m_fAutoMoveCount_r += g_pTimer->GetElapsed();
+            m_fAutoMoveCount_l = 0.0f;
+
+            if (m_fAutoMoveCount_r > buffer)
+                        m_pForm->Move(SDLK_RIGHT, true);
 		} else if ((g_pFramework->KeyDown(SDLK_LEFT)) && (m_bKeyLock_Move == true))
-		{
-			m_pForm->Move(SDLK_LEFT, true);
+        {
+            m_fAutoMoveCount_l += g_pTimer->GetElapsed();
+            m_fAutoMoveCount_r = 0.0f;
+
+            if (m_fAutoMoveCount_l > buffer)
+                        m_pForm->Move(SDLK_LEFT, true);
 		}
 
 		if (((g_pFramework->KeyDown(SDLK_RIGHT)) || (g_pFramework->KeyDown(SDLK_LEFT))) && (m_bKeyLock_Move == false))
@@ -80,9 +76,15 @@ void CGame::Run()
 			if (g_pFramework->KeyDown(SDLK_RIGHT))
 			{
 				m_pForm->Move(SDLK_RIGHT, false);
+
+                m_fAutoMoveCount_r = 0.0f;
+                m_fAutoMoveCount_l = 0.0f;
 			} else
 			{
 				m_pForm->Move(SDLK_LEFT, false);
+
+                m_fAutoMoveCount_r = 0.0f;
+                m_fAutoMoveCount_l = 0.0f;
 			}
 			m_bKeyLock_Move = true; //prevent autofire when first pressing move button
 		}
@@ -96,11 +98,24 @@ void CGame::Run()
 			m_bKeyLock_Rotate = false;
 		}
 
-		//ProcessFall
-        if (m_pForm->Fall() == false)
-		{
-			spawnForm();
-            m_bKeyLock_Fall = true;
+        //ProcessFall
+        if (g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == false))
+        {
+            if (m_pForm->Fall(true) == false)
+            {
+                spawnForm();
+                m_bKeyLock_Fall = true;
+            }
+        }else if (!g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == true))
+        {
+            m_bKeyLock_Fall = false;
+        }
+        else{
+            if (m_pForm->Fall(false) == false)
+            {
+                spawnForm();
+                m_bKeyLock_Fall = true;
+            }
         }
 
         g_pField->Update();
