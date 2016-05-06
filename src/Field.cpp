@@ -15,6 +15,7 @@ initialising
 void CField::Init(unsigned const Bsize)
 {
     m_Bsize = Bsize;
+    m_DelLines = 0;
 
     //initialising m_field
     m_field.resize(m_fieldW);
@@ -53,7 +54,7 @@ update the field: delete full lines
 
 void CField::Update()
 {
-    unsigned DelLines = 0;
+    //unsigned DelLines = 0;
 
     for (size_t j =  0; j < m_fieldH; j++)
     {
@@ -63,12 +64,10 @@ void CField::Update()
                goto continue_j;
         }
         EraseLine(j);
-        DelLines++;
+        m_DelLines++;
 
         continue_j:;
     }
-
-    g_pPlayer->AddDelLines(DelLines);
 }
 
 /****************************************************************************************************************************************************

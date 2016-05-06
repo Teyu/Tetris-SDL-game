@@ -1,36 +1,32 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "Framework.h"
-#include "Form.h"
+#include "Player.h"
 #include <ctime>
 #include <cstdlib>
 
 class CGame
 {
 public:
-	CGame();
+    CGame();
 
-	void Init();
+    void Init(float fInitSpeed);
 	void Run();
 	void Quit();
 
 private:
-	void ProcessEvents();
-	void spawnForm();
+    void ProcessEvents();
+    CForm*  spawnForm(float fSpeedOfFall);
 
-	CForm *m_pForm; 
 	enum Form{Bar, Square, L, J, Z, S, T}; 
-	Form m_FormKind;
+    Form m_TetrisForm;
 
-	bool m_bGameRun;
-	bool m_bKeyLock_Move;
-	bool m_bKeyLock_Rotate;
-    bool m_bKeyLock_Fall;
+    CForm *m_pForm;
+    CPlayer *m_pPlayer;
 
-    float m_fAutoMoveCount_l;
-    float m_fAutoMoveCount_r;
-    const float buffer = 0.25f;
+    bool m_bGameRun;
+
+    float m_fInitSpeed;
 };
 
 #endif

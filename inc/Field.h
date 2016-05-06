@@ -1,8 +1,6 @@
 #ifndef FIELD_H
 #define FIELD_H
 
-#include "Framework.h"
-#include "Player.h"
 #include "Sprite.h"
 #include <vector>
 #include <array>
@@ -24,6 +22,7 @@ public:
 
     unsigned const GetFieldW() {return m_fieldW;}
     unsigned const GetFieldH() {return m_fieldH;}
+    int GetDelLines() {return m_DelLines;}
 
 private:
 
@@ -34,6 +33,7 @@ private:
     vector<vector<CSprite*>> m_field;
 
     void EraseLine(unsigned Line);
+    int m_DelLines;
 };
 
 #endif

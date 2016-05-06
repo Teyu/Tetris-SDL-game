@@ -4,124 +4,89 @@
 constructor
 */
 
-
 CGame::CGame()
-{
-
-}
+{}
 
 /****************************************************************************************************************************************************
 initialise
 */
 
-
-void CGame::Init()
+void CGame::Init(float fInitSpeed)
 {
 	//seed random generator
 	time_t t;
 	srand( time(&t) );
 
-	spawnForm();
+    m_fInitSpeed = fInitSpeed;
+
+    m_pPlayer = new CPlayer();
+
+    m_pForm = spawnForm(m_fInitSpeed);
+    m_pPlayer->passForm(m_pForm);
 
     g_pField->Init(m_pForm->GetSize());
 
-	m_bGameRun = true;
-
-	m_bKeyLock_Move = false;
-    m_bKeyLock_Fall = false;
-    m_bKeyLock_Rotate = false;
+    m_bGameRun = true;
 }
 
 /****************************************************************************************************************************************************
 control, update and render entities
 */
 
-
 void CGame::Run()
 {
 	while(m_bGameRun == true)
-	{
-		ProcessEvents();
+    {
+        ProcessEvents();
 
-		g_pFramework->Update();
-		g_pFramework->Clear();
+        g_pFramework->Update();
+        g_pFramework->Clear();
 
-		//ProcessRotate
-		if ((g_pFramework->KeyDown(SDLK_UP)) && (m_bKeyLock_Rotate == false) && (m_FormKind != Square))
-		{
-			m_pForm->Rotate();
+        int Lines = m_pPlayer->GetDelLines();
+        m_pPlayer->Update();
 
-			m_bKeyLock_Rotate = true; //lock autofire
-		} 
-
-		//ProcessMove
-		if ((g_pFramework->KeyDown(SDLK_RIGHT)) && (m_bKeyLock_Move == true)) //autofire
+        if (!m_pPlayer->GetForm()->isAlive())
         {
-            m_fAutoMoveCount_r += g_pTimer->GetElapsed();
-            m_fAutoMoveCount_l = 0.0f;
-
-            if (m_fAutoMoveCount_r > buffer)
-                        m_pForm->Move(SDLK_RIGHT, true);
-		} else if ((g_pFramework->KeyDown(SDLK_LEFT)) && (m_bKeyLock_Move == true))
-        {
-            m_fAutoMoveCount_l += g_pTimer->GetElapsed();
-            m_fAutoMoveCount_r = 0.0f;
-
-            if (m_fAutoMoveCount_l > buffer)
-                        m_pForm->Move(SDLK_LEFT, true);
-		}
-
-		if (((g_pFramework->KeyDown(SDLK_RIGHT)) || (g_pFramework->KeyDown(SDLK_LEFT))) && (m_bKeyLock_Move == false))
-		{
-			if (g_pFramework->KeyDown(SDLK_RIGHT))
-			{
-				m_pForm->Move(SDLK_RIGHT, false);
-
-                m_fAutoMoveCount_r = 0.0f;
-                m_fAutoMoveCount_l = 0.0f;
-			} else
-			{
-				m_pForm->Move(SDLK_LEFT, false);
-
-                m_fAutoMoveCount_r = 0.0f;
-                m_fAutoMoveCount_l = 0.0f;
-			}
-			m_bKeyLock_Move = true; //prevent autofire when first pressing move button
-		}
-
-		if ((g_pFramework->KeyDown(SDLK_RIGHT) == false) && (g_pFramework->KeyDown(SDLK_LEFT) == false))
-		{
-			m_bKeyLock_Move = false;
-		}
-		if (g_pFramework->KeyDown(SDLK_UP) == false)
-		{
-			m_bKeyLock_Rotate = false;
-		}
-
-        //ProcessFall
-        if (g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == false))
-        {
-            if (m_pForm->Fall(true) == false)
+            Lines = m_pPlayer->GetDelLines() - Lines;
+            switch(Lines)
             {
-                spawnForm();
-                m_bKeyLock_Fall = true;
-            }
-        }else if (!g_pFramework->KeyDown(SDLK_DOWN) && (m_bKeyLock_Fall == true))
-        {
-            m_bKeyLock_Fall = false;
-        }
-        else{
-            if (m_pForm->Fall(false) == false)
+                case 0:
+                    break;
+                case 1:
+                    m_pPlayer->IncreasePoints(40*m_pPlayer->GetLevel());
+                    break;
+                case 2:
+                    m_pPlayer->IncreasePoints(100*m_pPlayer->GetLevel());
+                    break;
+                case 3:
+                    m_pPlayer->IncreasePoints(300*m_pPlayer->GetLevel());
+                    break;
+                case 4:
+                    m_pPlayer->IncreasePoints(1200*m_pPlayer->GetLevel());
+                    break;
+                }
+
+            if (m_pPlayer->GetDelLines()/10 == m_pPlayer->GetLevel())
             {
-                spawnForm();
-                m_bKeyLock_Fall = true;
+                m_pPlayer->IncreaseLevel();
             }
+
+            m_pPlayer->IncreasePoints(m_pPlayer->GetForm()->GetNumFastDown());
+
+            //each level speed of fall increases by + 5
+            m_pForm = spawnForm(m_fInitSpeed + 5*m_pPlayer->GetLevel());
+            m_pPlayer->passForm(m_pForm);
         }
+
+        m_pForm->Render();
 
         g_pField->Update();
+        g_pField->Render();
 
-		m_pForm->Render();
-		g_pFramework->Flip();
+        //TO BE REMOVED LATER (a class CMenu is yet to be implemented)
+        g_pFramework->RenderMenu(m_pPlayer->GetPoints(), m_pPlayer->GetLevel(), m_pPlayer->GetDelLines());
+
+        g_pFramework->Flip();
 	}
 }
 
@@ -129,14 +94,16 @@ void CGame::Run()
 quit the game
 */
 
-
 void CGame::Quit()
 {
-	delete(m_pForm);
-	m_pForm = NULL;
+    //TEST:
+    cout << m_pPlayer->GetPoints() << endl;
 
-	//TEST:
-	cout << g_pPlayer->GetPoints() << endl;
+    delete(m_pForm);
+    m_pForm = NULL;
+
+    delete(m_pPlayer);
+    m_pPlayer = NULL;
 }
 
 /****************************************************************************************************************************************************
@@ -165,40 +132,42 @@ void CGame::ProcessEvents()
 		}
 }
 
+
 /****************************************************************************************************************************************************
 spawn new form
 */
 
-void CGame::spawnForm() 
+CForm* CGame::spawnForm(float fSpeedOfFall)
 {
-    m_FormKind = static_cast<Form>(rand()%7);
+    m_TetrisForm = static_cast<Form>(rand()%7);
+    CForm* newForm;
 
-			switch(m_FormKind)
+            switch(m_TetrisForm)
 			{
 			case Bar:
-				m_pForm = new CBar; 
+                newForm = new CBar;
 				break;
 			case Square:
-				m_pForm = new CSquare;
+                newForm = new CSquare;
 				break;
 			case L:
-				m_pForm = new CL;
+                newForm = new CL;
 				break;
 			case J:
-				m_pForm = new CJ;
+                newForm = new CJ;
 				break;
 			case Z:
-				m_pForm = new CZ;
+                newForm = new CZ;
 				break;
 			case S:
-				m_pForm = new CS;
+                newForm = new CS;
 				break;
 			case T:
-				m_pForm = new CT;
+                newForm = new CT;
 				break;
 			}
 
-			//start tempo = 30
-			//each level + 5
-            m_pForm->Init(30.0f + 5*g_pPlayer->GetLevel());
+    newForm->Init(fSpeedOfFall);
+
+    return newForm;
 }

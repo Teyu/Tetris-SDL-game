@@ -1,52 +1,48 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Singleton.h"
+#include "SDL/SDL.h"
+#include "Form.h"
+#include "Framework.h"
 
-#define g_pPlayer CPlayer::Get() 
-
-class CPlayer : public TSingleton<CPlayer>
+class CPlayer
 {
 public:
-    CPlayer() : m_Points(0), m_level(1)
+    CPlayer() : m_pForm(nullptr), m_Points(0), m_DelLines(0), m_level(1)
     { }
-    unsigned GetPoints() {return m_Points;}
-    void IncreasePoints(unsigned Points) { m_Points += Points;}
-    //TEST
-    void AddDelLines(unsigned Lines)
-    {
-        //TODO: throw exception if Lines > 4
-        m_DelLines += Lines;
-        switch(Lines)
-        {
-                case 0:
-                    break;
-                case 1:
-                    m_Points += 40*(m_level);
-                    break;
-                case 2:
-                    m_Points += 100*(m_level);
-                    break;
-                case 3:
-                    m_Points += 300*(m_level);
-                    break;
-                case 4:
-                    m_Points += 1200*(m_level);
-                    break;
-        }
 
-        if (m_DelLines/10 == m_level)
-        {
-            m_level++;
-        }
-    }
+    void Update();
+
+    void passForm(CForm* &Form){m_pForm = Form;}
+    CForm* GetForm() {return m_pForm;}
+
+    void IncreaseLevel() {m_level++;}
+    void IncreasePoints(unsigned Points) { m_Points += Points;}
+
+    unsigned GetPoints() {return m_Points;}
     unsigned GetLevel() {return m_level;}
-    //ENDOFTEST
+    unsigned GetDelLines() {return m_DelLines;}
 
 private:
+    void ProcessRotateForm(int Key_ID);
+    void ProcessMoveForm(int Key_ID_Right, int Key_ID_Left);
+    void ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCount);
+    void ProcessFormFall(int Key_ID); //TODO:make function Form::Update for falling process
+
+    CForm *m_pForm;
+
     unsigned m_Points;
     unsigned m_DelLines;
     unsigned m_level;
+
+    bool m_bKeyLock_MoveR;
+    bool m_bKeyLock_MoveL;
+    bool m_bKeyLock_Rotate;
+    bool m_bKeyLock_FastDown;
+
+    float m_fAutoMoveCount_l;
+    float m_fAutoMoveCount_r;
+    const float buffer = 0.2f;
 };
 
 #endif

@@ -2,8 +2,6 @@
 #define FORM_H
 
 #include "Sprite.h"
-#include "Player.h"
-#include "Framework.h"
 #include "Timer.h"
 #include "Field.h"
 #include <array>
@@ -22,9 +20,12 @@ public:
     virtual void loadBlockImage() = 0;
 
     bool Fall(bool bFast);
-    void Rotate();
+    virtual void Rotate();
     void Move(int Dir, bool bAutofire);
-	int GetSize() { return m_size;}
+    int GetSize() { return m_size;}
+    int GetNumFastDown() {return m_fDistFastDown/m_size;}
+
+    bool isAlive() {return m_bIsAlive;}
 
 protected:
 	float m_fXPos;
@@ -39,6 +40,7 @@ protected:
 
 private:
     void Move(float dx, float dy);
+    bool m_bIsAlive;
 
     float m_fFallingSpeed;
     const float m_fFallingFastSpeed;
@@ -157,6 +159,7 @@ public:
             m_Blocks[i].Load("data/OrangeBlock.bmp");
         }
     }
+    void Rotate() {}
     ~CSquare(){}
 };
 

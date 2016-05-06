@@ -3,14 +3,14 @@
 #include "Framework.h"
 #include "Game.h"
 
-int main( int argc, char* args[] )
+int main()
 {
 	if (g_pFramework->Init(500, 600, 16, false) == false)
 		return 0;
 
-	CGame Game;
+    CGame Game;
 
-	Game.Init();
+    Game.Init(30.0f);
 	Game.Run();
 	Game.Quit();
 

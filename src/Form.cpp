@@ -10,6 +10,7 @@ CForm::CForm() :
     m_size(0), m_fieldW(0), m_fieldH(0),
 
     m_RotPoint(1),
+    m_bIsAlive(false),
 
     m_fFallingSpeed(0.0f), m_fFallingFastSpeed(630.0f), m_fDistFastDown(0.0f),
     m_fAutoMoveSpeed(500.0f)
@@ -32,6 +33,7 @@ initialising
 void CForm::Init(float fFallingSpeed)
 {
     m_fFallingSpeed = fFallingSpeed;
+    m_bIsAlive = true;
 
     loadBlockImage();
     m_size = m_Blocks[0].GetRect().h;
@@ -52,9 +54,7 @@ void CForm::Render()
 	for (int i=0; i < 4; i++)
 	{
         m_Blocks[i].Render();
-	}
-
-	g_pField->Render(); 
+    }
 }
 
 /****************************************************************************************************************************************************
@@ -73,18 +73,17 @@ bool CForm::Fall(bool bFast)
         {
             Move(0.0f, -dy);
 
-            //TO CGAME...
             for (int i = 0; i < 4; i++)
                 g_pField->IncludeBlock(m_Blocks[i]);
 
-            g_pPlayer->IncreasePoints(m_fDistFastDown/m_size);
-            //...TO CGAME
+            m_bIsAlive = false;
 
             return false;
 		}
     }
 
-    m_fDistFastDown = (bFast ? m_fDistFastDown + dy : 0);
+    if (m_bIsAlive)
+        m_fDistFastDown = (bFast ? m_fDistFastDown + dy : 0);
 
 	return true;
 }

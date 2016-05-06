@@ -36,6 +36,7 @@ bool CFramework::Init(int ScreenWidth, int ScreenHeight, int ColorDepth, bool bF
 
 	SDL_WM_SetCaption("Tetris", "Tetris");
 
+    //TO BE REMOVED LATER...
     if (TTF_Init() != 0)
 	{
 		cout << "SDL_tff could not be initialised" << endl;
@@ -57,10 +58,11 @@ bool CFramework::Init(int ScreenWidth, int ScreenHeight, int ColorDepth, bool bF
 	  return false;
    }
 
-	SDL_Color color = {255, 255, 255};
+    SDL_Color color = {255, 255, 255};
 	text_color = color; 
     m_ptext_points = TTF_RenderText_Solid(font, "Points: ", text_color);
 	m_ptext_level = TTF_RenderText_Solid(font, "Level: ", text_color);
+    m_ptext_lines = TTF_RenderText_Solid(font, "Lines: ", text_color);
 
 	if (m_ptext_points == NULL)
 	{
@@ -70,6 +72,25 @@ bool CFramework::Init(int ScreenWidth, int ScreenHeight, int ColorDepth, bool bF
       
 		return false;
     }
+
+    if (m_ptext_level == NULL)
+    {
+        cout << "TTF_RenderText_Solid() Failed: " << TTF_GetError() << endl;
+
+        Quit();
+
+        return false;
+    }
+
+    if (m_ptext_lines == NULL)
+    {
+        cout << "TTF_RenderText_Solid() Failed: " << TTF_GetError() << endl;
+
+        Quit();
+
+        return false;
+    }
+    //...TO BE REMOVED LATER
 
 
 	m_pKeystate = SDL_GetKeyState(NULL);
@@ -86,7 +107,7 @@ shut down framework
 
 void CFramework::Quit()
 {
-    //TTF_Quit();
+    TTF_Quit(); //TO BE REMOVED LATER
 	SDL_Quit();
 }
 
@@ -124,52 +145,6 @@ display on screen
 
 void CFramework::Flip()
 {
-	//display text
-    SDL_Rect Pos_points;
-	SDL_Rect Pos_level;
-	Pos_points.x = 320;
-	Pos_level.x = 320;
-	Pos_points.y = 10;
-	Pos_level.y = 40;
-	Pos_points.w = m_ptext_points->w;
-	Pos_level.w = m_ptext_level->w;
-	Pos_points.h = m_ptext_points->h;
-	Pos_level.h = m_ptext_level->h;
-
-	if (SDL_BlitSurface(m_ptext_points, NULL, m_pScreen, &Pos_points) != 0)
-      { 
-	 cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
-      }
-	if (SDL_BlitSurface(m_ptext_level, NULL, m_pScreen, &Pos_level) != 0)
-      { 
-	cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
-      }
-
-    SDL_Surface *text;
-    stringstream sp;
-    sp << g_pPlayer->GetPoints();
-    text = TTF_RenderText_Solid(font, sp.str().c_str(), text_color);
-	Pos_points.x += Pos_points.w; 
-	Pos_points.w = text->w;
-    Pos_points.h = text->h;
-
-	if (SDL_BlitSurface(text, NULL, m_pScreen, &Pos_points) != 0)
-      { 
-		  cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
-      }
-
-    stringstream sl;
-    sl << g_pPlayer->GetLevel();
-    text = TTF_RenderText_Solid(font, sl.str().c_str(), text_color);
-    Pos_level.x += Pos_level.w;
-    Pos_level.w = text->w;
-    Pos_level.h = text->h;
-
-    if (SDL_BlitSurface(text, NULL, m_pScreen, &Pos_level) != 0)
-      {
-          cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
-      }
-
 	//dividing line
 	SDL_Rect LineBlock;
 	LineBlock.x = 300;
