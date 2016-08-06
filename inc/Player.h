@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 #include "TetrisForms.h"
 #include "Framework.h"
 
