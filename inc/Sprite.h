@@ -6,25 +6,23 @@
 class CSprite
 {
 public: 
-	CSprite();
+    CSprite();
     CSprite(const CSprite& newSprite) :
         m_pScreen(newSprite.m_pScreen), m_pImage(newSprite.m_pImage), m_Rect(newSprite.m_Rect), m_sImageFile(newSprite.m_sImageFile)
     {}
-	~CSprite();
+    ~CSprite();
 
-	void Load (const string sFilename);
+    void Load (const string sFilename);
 	
-	void SetPos(float fXPos, float fYPos);
-	void Render();
-	SDL_Rect GetRect() {return m_Rect;}
-	string GetImageFile() { return m_sImageFile;} 
+    void SetPos(float fXPos, float fYPos);
+    void Render();
+    SDL_Rect GetRect() {return m_Rect;}
 
 private:
-	SDL_Surface *m_pScreen;
-	SDL_Surface *m_pImage;
-	SDL_Rect m_Rect;
-	string m_sImageFile;
-
+    SDL_Surface *m_pScreen;
+    SDL_Surface *m_pImage;
+    SDL_Rect m_Rect;
+    string m_sImageFile;
 };
 
 

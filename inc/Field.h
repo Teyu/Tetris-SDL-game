@@ -15,7 +15,7 @@ class CField : public TSingleton<CField>
 public:
     CField(unsigned const fieldW, unsigned const fieldH);
     void Init(unsigned const Bsize);
-	void Render();
+    void Render();
     void Update();
     bool IsBlock( float fXPix, float fYPix);
     void IncludeBlock( CSprite& Block);

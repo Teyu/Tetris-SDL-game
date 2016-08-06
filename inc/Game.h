@@ -11,14 +11,14 @@ public:
     CGame();
 
     void Init(float fInitSpeed);
-	void Run();
-	void Quit();
+    void Run();
+    void Quit();
 
 private:
     void ProcessEvents();
     CForm*  spawnForm(float fSpeedOfFall);
 
-	enum Form{Bar, Square, L, J, Z, S, T}; 
+    enum Form{Bar, Square, L, J, Z, S, T};
     Form m_TetrisForm;
 
     CForm *m_pForm;

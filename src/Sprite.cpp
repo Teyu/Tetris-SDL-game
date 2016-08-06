@@ -88,7 +88,7 @@ void CSprite::Render()
 	try{
 		if ((m_Rect.x < 0) || (m_Rect.y < 0))
 		{
-			throw "could not render sprite, position has not yet been set";
+            throw "could not render sprite, invalid position";
 		}
 	}catch(char* msg){
 		cerr << msg << endl;

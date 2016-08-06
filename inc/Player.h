@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include "SDL/SDL.h"
-#include "Form.h"
+#include "TetrisForms.h"
 #include "Framework.h"
 
 class CPlayer

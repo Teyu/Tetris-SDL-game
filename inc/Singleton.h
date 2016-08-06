@@ -5,19 +5,19 @@ template <class T>
 class TSingleton
 {
 protected:
-	static T *m_pSingleton;
+    static T *m_pSingleton;
 
 public:
-	virtual ~TSingleton() {}
+    virtual ~TSingleton() {}
 
     //create object with default-constructor
-	inline static T* Get()
-	{
-		if (!m_pSingleton) 
-		{
-			m_pSingleton = new T;
-		}
-		return (m_pSingleton);
+    inline static T* Get()
+    {
+        if (!m_pSingleton)
+        {
+            m_pSingleton = new T;
+        }
+        return (m_pSingleton);
     }
 
     //create object with non-default-constructor
@@ -30,14 +30,14 @@ public:
         return (m_pSingleton);
     }
 
-	static void Del()
-	{
-		if (m_pSingleton)
-		{
-			delete (m_pSingleton);
-			m_pSingleton = NULL;
-		}
-	}
+    static void Del()
+    {
+        if (m_pSingleton)
+        {
+            delete (m_pSingleton);
+            m_pSingleton = NULL;
+        }
+    }
 };
 
 template <class T>
