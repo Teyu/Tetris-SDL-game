@@ -3,6 +3,10 @@
 #include "Framework.h"
 #include "Game.h"
 
+#ifdef _WIN32
+#undef main
+#endif
+
 int main()
 {
 	if (g_pFramework->Init(500, 600, 16, false) == false)

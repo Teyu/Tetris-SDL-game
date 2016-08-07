@@ -13,6 +13,9 @@ INCLUDE_DIRECTORIES( inc )
 
 ADD_SUBDIRECTORY(libs) #subdirectories must contain a CMakeLists.txt file
 
+FILE(COPY ${CMAKE_SOURCE_DIR}/fonts/FreeSans.ttf DESTINATION ${CMAKE_BINARY_DIR})
+FILE(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
+
 SET(TETRIS_SOURCE_FILES 
 		${CMAKE_SOURCE_DIR}/src/Field.cpp
 		${CMAKE_SOURCE_DIR}/src/Form.cpp

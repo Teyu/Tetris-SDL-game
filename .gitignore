@@ -24,6 +24,10 @@
 
 # autosaves
 *~
+*.autosave
+
+# CMakeLists.txt.user file
+*.txt.user
 
 # Executables
 *.exe
