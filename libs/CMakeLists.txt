@@ -1,26 +1,27 @@
 
+#TODO:make subdirectory tests to src and inc, move CMakeLists Code to subdirectory tests
+# leave this:
+#IF (TETRIS_BUILD_TESTS)
+# ADD_SUBDIRECTORIES(gtest)
+#ENDIF()
 IF(TETRIS_BUILD_TESTS)
-        MESSAGE( "Adding test environment. Type \"make test\" to run unit tests." )
+        MESSAGE( "Adding test environment." )
 
-        ADD_SUBDIRECTORY(gtest)
+        ADD_SUBDIRECTORY(googletest)
 
         INCLUDE_DIRECTORIES(
+                ${gmock_SOURCE_DIR}/include
                 ${gtest_SOURCE_DIR}/include
-                ${gtest_SOURCE_DIR}
         )
 
         ADD_EXECUTABLE(TetrisUnitTests
-                ${CMAKE_SOURCE_DIR}/tests/sample.cpp
+                ${CMAKE_SOURCE_DIR}/tests/MockForm.cpp
         )
 
         TARGET_LINK_LIBRARIES(TetrisUnitTests
-                gtest
-                gtest_main
+                gmock_main
                 TetrisCore
         )
-
-        #this enables the add_test command and adds the "test" target to the Makefile. Typing the "make test" command will then run CTest.
-        ENABLE_TESTING()
 
         ADD_TEST(
                 NAME TetrisUnitTests

@@ -33,8 +33,8 @@ When CMake has finished successfully just type "make" or use your preferable IDE
 
 ### Windows
 
-You can download the required libraries at http://www.libsdl.org <http://www.libsdl.org> (choose the SDL1.2 develop lib)
-and http://www.libsdl.org/projects/SDL_ttf/release-1.2.html <http://www.libsdl.org/projects/SDL_ttf/release-1.2.html>. Unpack them to any
+You can download the required libraries at <http://www.libsdl.org> (choose the SDL1.2 develop lib)
+and <http://www.libsdl.org/projects/SDL_ttf/release-1.2.html>. Unpack them to any
 location you want. Create a build directoy where you want to build the source code. Run the cmake-gui and specify the build and source directories.
 
 NOTE: In-source-builds are not supported, cmake will throw an error if you are trying to do so. Your build and source directories have to differ.
@@ -53,5 +53,5 @@ preferable IDE to compile the software (for example: if you are using Visual Stu
 
 ## Unit Tests (under construction)
 
-To build the unit tests you have to set the TETRIS_BUILD_TESTS flag (for example: "cmake -DTETRIS_BUILD_TESTS = ON"). Now type "make test
+To build the unit tests you have to set the TETRIS_BUILD_TESTS flag (for example: "cmake -DTETRIS_BUILD_TESTS = ON"). Now type "make test"
 or simply run the created executable TetrisUnitTests to run the unit tests.

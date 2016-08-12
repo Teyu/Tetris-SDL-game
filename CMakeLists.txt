@@ -13,6 +13,9 @@ INCLUDE_DIRECTORIES( inc )
 
 ADD_SUBDIRECTORY(libs) #subdirectories must contain a CMakeLists.txt file
 
+#this enables the add_test command and adds the "test" target to the Makefile. Typing the "make test" command will then run CTest.
+ENABLE_TESTING()
+
 FILE(COPY ${CMAKE_SOURCE_DIR}/fonts/FreeSans.ttf DESTINATION ${CMAKE_BINARY_DIR})
 FILE(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
 
@@ -56,18 +59,18 @@ IF(SDL_FOUND)
                 ${SDL_INCLUDE_DIR}/SDL
         )
         TARGET_LINK_LIBRARIES(Tetris 
-					${SDL_LIBRARY}
+                ${SDL_LIBRARY}
 		)
 ENDIF()
 
 
 IF(NOT SDL_LIBRARY)
-        MESSAGE( FATAL_ERROR "SDL_LIBRARY not set. Please specify the path to the SDL library using the SDL_LIBRARY flag.")
+        MESSAGE( FATAL_ERROR "SDL_LIBRARY not set. Please specify the path to the SDL library using the SDL_LIBRARY tag.")
 ELSE()
         MESSAGE( "Found SDL_LIBRARY under ${SDL_LIBRARY}.")
 ENDIF()
 IF(NOT SDL_INCLUDE_DIR)
-        MESSAGE( FATAL_ERROR "SDL_INCLUDE_DIR not set. Please specify the path to the SDL include directoy using the SDL_INCLUDE_DIR flag.")
+        MESSAGE( FATAL_ERROR "SDL_INCLUDE_DIR not set. Please specify the path to the SDL include directoy using the SDL_INCLUDE_DIR tag.")
 ELSE()
         MESSAGE( "Found SDL_INCLUDE_DIR under ${SDL_INCLUDE_DIR}." )
 ENDIF()
@@ -86,12 +89,12 @@ IF(SDLTTF_FOUND)
 ENDIF()
 
 IF(NOT SDLTTF_LIBRARY)
-        MESSAGE( FATAL_ERROR "SDLTTF_LIBRARY not set. Please specify the path to the SDL_ttf library using the SDLTTF_LIBRARY flag.")
+        MESSAGE( FATAL_ERROR "SDLTTF_LIBRARY not set. Please specify the path to the SDL_ttf library using the SDLTTF_LIBRARY tag.")
 ELSE()
         MESSAGE( "Found SDLTTF_LIBRARIES under ${SDLTTF_LIBRARY}.")
 ENDIF()
 IF(NOT SDLTTF_INCLUDE_DIR)
-        MESSAGE( FATAL_ERROR "SDLTTF_INCLUDE_DIR not set. Please specify the path to the SDL_ttf include directoy using the SDLTTF_INCLUDE_DIR flag.")
+        MESSAGE( FATAL_ERROR "SDLTTF_INCLUDE_DIR not set. Please specify the path to the SDL_ttf include directoy using the SDLTTF_INCLUDE_DIR tag.")
 ELSE()
         MESSAGE( "Found SDLTTF_INCLUDE_DIR under ${SDLTTF_INCLUDE_DIR}." )
 ENDIF()
