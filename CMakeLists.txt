@@ -1,27 +1,32 @@
 cmake_minimum_required (VERSION 2.8.12 FATAL_ERROR)
 
-PROJECT(Tetris)
+project(Tetris)
+set (TETRIS_VERSION_MAJOR 1)
+set (TETRIS_VERSION_MINOR 0)
 
-IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-  MESSAGE(FATAL_ERROR "You are about to build inside of your source directory. Please create an out-of-source build.")
-ENDIF()
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+  message(FATAL_ERROR "Please create an out-of-source build.")
+endif()
 
-OPTION(TETRIS_BUILD_TESTS "Build tetris unit tests." OFF)
+option(TETRIS_BUILD_TESTS "Build tetris unit tests." OFF)
 
-ENABLE_TESTING()
+enable_testing()
 
-FILE(COPY ${CMAKE_SOURCE_DIR}/fonts/FreeSans.ttf DESTINATION ${CMAKE_BINARY_DIR}/src)
-FILE(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/fonts/FreeSans.ttf DESTINATION ${CMAKE_BINARY_DIR}/src)
+file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
 
-IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall -g")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -Wall")
-ELSEIF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
-	SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MDd")
-ENDIF()
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD")
+endif()
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/TetrisConfig.h.in"
+  "${PROJECT_BINARY_DIR}/TetrisConfig.h"
+)
+include_directories(${PROJECT_BINARY_DIR})
 
 add_subdirectory(src)
-ADD_SUBDIRECTORY(libs)
-
-#TODO: asuführbare Dateien sollten im binary tree unter bin landen! Generell: Ausgabe strukturieren!
+add_subdirectory(libs)

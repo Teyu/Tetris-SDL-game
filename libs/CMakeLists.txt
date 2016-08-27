@@ -1,5 +1,5 @@
 
-IF (TETRIS_BUILD_TESTS)
-  ADD_SUBDIRECTORY(googletest)
-ENDIF()
+if(TETRIS_BUILD_TESTS)
+  add_subdirectory(googletest)
+endif()
 

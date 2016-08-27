@@ -1,21 +1,21 @@
 
-MESSAGE( "Adding test environment." )
+message( "Adding test environment." )
 
-INCLUDE_DIRECTORIES(
+include_directories(
   ${gmock_SOURCE_DIR}/include
   ${gtest_SOURCE_DIR}/include
 )
 
-ADD_EXECUTABLE(TetrisUnitTests
+add_executable(TetrisUnitTests
   ${CMAKE_SOURCE_DIR}/src/tests/MockForm.cpp
 )
 
-TARGET_LINK_LIBRARIES(TetrisUnitTests
+target_link_libraries(TetrisUnitTests
   gmock_main
   TetrisCore
 )
 
-ADD_TEST(
+add_test(
   NAME TetrisUnitTests
   COMMAND TetrisUnitTests
 )
