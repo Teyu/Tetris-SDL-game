@@ -97,7 +97,7 @@ quit the game
 void CGame::Quit()
 {
     //TEST:
-    cout << m_pPlayer->GetPoints() << endl;
+    cout << "Points: " << m_pPlayer->GetPoints() << endl;
 
     delete(m_pForm);
     m_pForm = NULL;
