@@ -5,15 +5,27 @@
 #include "TetrisForms.h"
 #include "Framework.h"
 
+struct keyState
+{
+    bool bKeyLock_MoveR = false;
+    bool bKeyLock_MoveL = false;
+    bool bKeyLock_Rotate = false;
+    bool bKeyLock_FastDown = false;
+
+    float fAutoMoveCnt_l = 0.0f;
+    float fAutoMoveCnt_r = 0.0f;
+};
+
 class CPlayer
 {
 public:
     CPlayer() : m_pForm(nullptr), m_Points(0), m_DelLines(0), m_level(1)
     { }
 
-    void Update();
+    template<uint width, uint height>
+    void Update(CField<width, height> * const field);
 
-    void passForm(CForm* &Form){m_pForm = Form;}
+    void passForm(CForm * const Form){m_pForm = Form;}
     CForm* GetForm() {return m_pForm;}
 
     void IncreaseLevel() {m_level++;}
@@ -23,11 +35,16 @@ public:
     unsigned GetLevel() {return m_level;}
     unsigned GetDelLines() {return m_DelLines;}
 
+    template<uint width, uint height>
+    void ProcessRotateForm(int Key_ID, CField<width, height> * const field);
+    template<uint width, uint height>
+    void ProcessMoveForm(int Key_ID_Right, int Key_ID_Left, CField<width, height> * const field);
+    template<uint width, uint height>
+    void ProcessFormFall(int Key_ID, CField<width, height> * const field);
+
 private:
-    void ProcessRotateForm(int Key_ID);
-    void ProcessMoveForm(int Key_ID_Right, int Key_ID_Left);
-    void ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCount);
-    void ProcessFormFall(int Key_ID); //TODO:make function Form::Update for falling process
+    template<uint width, uint height>
+    void ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCount, CField<width, height> * const field);
 
     CForm *m_pForm;
 
@@ -35,14 +52,9 @@ private:
     unsigned m_DelLines;
     unsigned m_level;
 
-    bool m_bKeyLock_MoveR;
-    bool m_bKeyLock_MoveL;
-    bool m_bKeyLock_Rotate;
-    bool m_bKeyLock_FastDown;
-
-    float m_fAutoMoveCount_l;
-    float m_fAutoMoveCount_r;
-    const float buffer = 0.2f;
+    struct keyState m_ProcessKeyState;
 };
+
+#include "../src/Player.inl"
 
 #endif

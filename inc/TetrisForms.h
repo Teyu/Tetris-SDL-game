@@ -3,12 +3,12 @@
 class CBar: public CForm
 {
 public:
-    void setStartPos()
+    void setPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - 2*m_size, y = m_size;
-        for (int i = 0; i < 4; x += m_size, i++)
+        fx = fx - 2*m_size;
+        for (int i = 0; i < 4; fx += m_size, i++)
         {
-            m_Blocks[i].SetPos(x,y);
+            m_Blocks[i].SetPos(fx,fy);
         }
     }
 
@@ -25,12 +25,11 @@ public:
 class CJ: public CForm
 {
 public:
-    void setStartPos()
+    void setPos(float fx, float fy)
     {
-        float x = m_fieldW/2, y = m_size;
-        for (int i = 0; i < 4; i == 2 ? x -= m_size : y += m_size, i++)
+        for (int i = 0; i < 4; i == 2 ? fx -= m_size : fy += m_size, i++)
         {
-            m_Blocks[i].SetPos(x,y);
+            m_Blocks[i].SetPos(fx,fy);
         }
     }
     void loadBlockImage()
@@ -46,12 +45,12 @@ public:
 class CL: public CForm
 {
 public:
-    void setStartPos()
+    void setPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = m_size;
-        for (int i = 0; i < 4; i == 2 ? x += m_size : y += m_size, i++)
+        fx = fx - m_size;
+        for (int i = 0; i < 4; i == 2 ? fx += m_size : fy += m_size, i++)
         {
-            m_Blocks[i].SetPos(x,y);
+            m_Blocks[i].SetPos(fx,fy);
         }
     }
     void loadBlockImage()
@@ -67,12 +66,12 @@ public:
 class CS: public CForm
 {
 public:
-    void setStartPos()
+    void setPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = 2*m_size;
-        for (int i = 0; i < 4; (i%2 == 0) ? x += m_size : y -= m_size, i++)
+        fx = fx - m_size;
+        for (int i = 0; i < 4; (i%2 == 0) ? fx += m_size : fy -= m_size, i++)
         {
-            m_Blocks[i].SetPos(x,y);
+            m_Blocks[i].SetPos(fx,fy);
         }
     }
     void loadBlockImage()
@@ -88,16 +87,16 @@ public:
 class CSquare: public CForm
 {
 public:
-    void setStartPos()
+    void setPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = m_size;
-        for (int i = 0; i < 4; x += m_size, i++)
+        fx = fx - m_size;
+        for (int i = 0; i < 4; fx += m_size, i++)
         {
-            m_Blocks[i].SetPos(x,y);
+            m_Blocks[i].SetPos(fx,fy);
             if (i == 1)
             {
-                y += m_Blocks[i].GetRect().h;
-                x -= 2*m_Blocks[i].GetRect().w;
+                fy += m_Blocks[i].GetRect().h;
+                fx -= 2*m_Blocks[i].GetRect().w;
             }
         }
     }
@@ -115,16 +114,16 @@ public:
 class CT: public CForm
 {
 public:
-    void setStartPos()
+    void setPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size ,y = m_size;
-        for (int i = 0; i < 4; x += m_size, i++)
+        fx = fx - m_size;
+        for (int i = 0; i < 4; fx += m_size, i++)
         {
-            m_Blocks[i].SetPos(x,y);
+            m_Blocks[i].SetPos(fx,fy);
             if (i == 2)
             {
-                x -= 2*m_Blocks[i].GetRect().w;
-                y += m_Blocks[0].GetRect().h;
+                fx -= 2*m_Blocks[i].GetRect().w;
+                fy += m_Blocks[0].GetRect().h;
             }
         }
     }
@@ -141,12 +140,12 @@ public:
 class CZ: public CForm
 {
 public:
-    void setStartPos()
+    void setPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = m_size;
-        for (int i = 0; i < 4; (i%2 == 0) ? x += m_size : y += m_size, i++)
+        fx = fx - m_size;
+        for (int i = 0; i < 4; (i%2 == 0) ? fx += m_size : fy += m_size, i++)
         {
-            m_Blocks[i].SetPos(x,y);
+            m_Blocks[i].SetPos(fx,fy);
         }
     }
     void loadBlockImage()
