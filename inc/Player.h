@@ -14,7 +14,7 @@ public:
     template<uint width, uint height>
     void Update(CField<width, height> * const field);
 
-    void passForm(CForm* &Form){m_pForm = Form;}
+    void passForm(CForm * const Form){m_pForm = Form;}
     CForm* GetForm() {return m_pForm;}
 
     void IncreaseLevel() {m_level++;}

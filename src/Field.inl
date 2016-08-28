@@ -19,15 +19,15 @@ void CField<width,height>::Init(unsigned const Bsize)
     m_DelLines = 0;
 
     //initialising m_field
-    m_field.resize(width);
+    //m_field.resize(width);
     for (size_t i=0; i < width ; i++)
+    {
+        //m_field[i].resize(height);
+        for (size_t j=0; j < height; j++)
         {
-            m_field[i].resize(height);
-            for (size_t j=0; j < height; j++)
-            {
-                m_field[i][j] = nullptr;
-            }
+            m_field[i][j] = nullptr;
         }
+    }
 }
 
 /****************************************************************************************************************************************************
@@ -82,7 +82,7 @@ bool CField<width,height>::IsBlock( float fXPix, float fYPix)
     if ((fXPix < 0.0f) || (fXPix >= width*m_Bsize) || (fYPix < 0.0f) || (fYPix >= height*m_Bsize))
         return false;
 
-    return (m_field[unsigned(fXPix/m_Bsize)][unsigned(fYPix/m_Bsize)] == nullptr) ? false : true;
+    return (m_field[static_cast<uint>(fXPix/m_Bsize)][static_cast<uint>(fYPix/m_Bsize)] != nullptr);
 }
 
 /****************************************************************************************************************************************************
@@ -104,17 +104,17 @@ void CField<width,height>::EraseLine(unsigned Line)
 {
     //overwrite a line with its upper line starting with the regarding line to be deleted
     for (size_t i = 0; i < width; i++)
+    {
+        for (size_t j = Line; j > 1; j--) //y-axis is inverted
         {
-            for (size_t j = Line; j > 1; j--) //y-axis is inverted
+            m_field[i][j] = m_field[i][j-1];
+            if (m_field[i][j] != nullptr)
             {
-                m_field[i][j] = m_field[i][j-1];
-                if (m_field[i][j] != nullptr)
-                {
-                    SDL_Rect tmp = m_field[i][j]->GetRect();
-                    m_field[i][j]->SetPos(tmp.x, tmp.y + m_Bsize);
-                }
+                SDL_Rect tmp = m_field[i][j]->GetRect();
+                m_field[i][j]->SetPos(tmp.x, tmp.y + m_Bsize);
             }
-            delete(m_field[i][0]);
-            m_field[i][0] = nullptr;
         }
+        delete(m_field[i][0]);
+        m_field[i][0] = nullptr;
+    }
 }

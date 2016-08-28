@@ -72,7 +72,7 @@ void CGame::Run()
                 m_pPlayer->IncreaseLevel();
             }
 
-            m_pPlayer->IncreasePoints(m_pPlayer->GetForm()->GetNumFastDown());
+            m_pPlayer->IncreasePoints(m_pPlayer->GetForm()->GetNumBlocksFastDown());
 
             //each level speed of fall increases by + 5
             m_pForm = spawnForm(m_fInitSpeed + 5*m_pPlayer->GetLevel());

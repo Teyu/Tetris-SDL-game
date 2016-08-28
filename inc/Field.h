@@ -23,7 +23,7 @@ public:
 private:
     unsigned m_Bsize;
 
-    vector<vector<CSprite*>> m_field; //TODO: use array/map or so and instantiate with template arguments
+    CSprite * m_field[width][height];
 
     void EraseLine(unsigned Line);
     int m_DelLines;

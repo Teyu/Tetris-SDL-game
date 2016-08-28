@@ -9,8 +9,8 @@ bool CForm::Fall(bool bFast, CField<width, height> * const field)
     float dy = (bFast ? m_fFallingFastSpeed : m_fFallingSpeed) * g_pTimer->GetElapsed();
     Move(0.0f, dy);
 
-        for (int i = 0; i < 4; i++)
-        {
+    for (size_t i = 0; i < 4; i++)
+    {
         if ((m_Blocks[i].GetRect().y == height*m_size) || (field->IsBlock(m_Blocks[i].GetRect().x, m_Blocks[i].GetRect().y)))
         {
             Move(0.0f, -dy);
@@ -21,13 +21,13 @@ bool CForm::Fall(bool bFast, CField<width, height> * const field)
             m_bIsAlive = false;
 
             return false;
-                }
+         }
     }
 
     if (m_bIsAlive)
         m_fDistFastDown = (bFast ? m_fDistFastDown + dy : 0);
 
-        return true;
+    return true;
 }
 
 /****************************************************************************************************************************************************
@@ -40,7 +40,7 @@ void CForm::Rotate(CField<width, height> * const field)
     float x_newP[4];
     float y_newP[4];
 
-    for (int i = 0; i < 4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
         //x-axis and y-axis values of m_Blocks if m_RotPoint was (0,0)
         float x_RelRotP = m_Blocks[i].GetRect().x - m_Blocks[m_RotPoint].GetRect().x;
@@ -61,12 +61,12 @@ void CForm::Rotate(CField<width, height> * const field)
 
         if ((x_newP[i] >= width*m_size) || (x_newP[i] < 0.0f))
         {
-            Move(float(x_newP[i] < 0.0f ? m_size : -m_size), 0.0f);
-            i = - 1;  //ACHTUNG: ggf. endlosschleife
+            Move(static_cast<float>(x_newP[i] < 0.0f ? m_size : -m_size), 0.0f);
+            i = - 1;  //ACHTUNG: ggf. endlosschleife -> TODO: assert in CField einfügen, dass dieses mindestens 4x4 groß sein muss
         }
         else if ((y_newP[i] >= height*m_size) || (y_newP[i] < 0.0f))
         {
-            Move(0.0f,float(y_newP[i] < 0.0f ? m_size : -m_size));
+            Move(0.0f,static_cast<float>(y_newP[i] < 0.0f ? m_size : -m_size));
             i = - 1;
         }
     }
@@ -74,7 +74,7 @@ void CForm::Rotate(CField<width, height> * const field)
     m_fXPos += (x_newP[0] - m_Blocks[0].GetRect().x);
     m_fYPos += (y_newP[0] - m_Blocks[0].GetRect().y);
 
-    for (int i = 0; i < 4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
         m_Blocks[i].SetPos(x_newP[i], y_newP[i]);
     }
@@ -86,30 +86,29 @@ move form one size of a block to the left or right depending on which button has
 
 template<uint width, uint height>
 void CForm::Move(int Dir, bool bAutofire, CField<width, height> * const field)
+{
+    if ((Dir != SDLK_RIGHT) && (Dir != SDLK_LEFT))
+        return;
+
+    float dx = 0.0f;
+    if (bAutofire)
     {
-        if ((Dir != SDLK_RIGHT) && (Dir != SDLK_LEFT))
+        dx = (float) (Dir == SDLK_RIGHT ? 1 : -1) * m_fAutoMoveSpeed * g_pTimer->GetElapsed();
+    } else
+    {
+        dx = (float) (Dir == SDLK_RIGHT ? 1 : -1) * m_size;
+    }
+
+    Move(dx, 0.0f);
+
+    //verify if there is enough space
+    for (size_t i = 0; i < 4; i++)
+    {
+        if ((m_Blocks[i].GetRect().x == width*m_size) || (m_Blocks[i].GetRect().x < 0) ||
+            (field->IsBlock(m_Blocks[i].GetRect().x, m_Blocks[i].GetRect().y)))
+        {
+            Move(-dx, 0.0f);
             return;
-
-            float dx = 0.0f;
-        if (bAutofire)
-        {
-            dx = (float) (Dir == SDLK_RIGHT ? 1 : -1) * m_fAutoMoveSpeed * g_pTimer->GetElapsed();
-
-        } else
-        {
-            dx = (float) (Dir == SDLK_RIGHT ? 1 : -1) * m_size;
-        }
-
-            Move(dx, 0.0f);
-
-        //verify if there is enough space
-        for (int i = 0; i < 4; i++)
-        {
-            if ((m_Blocks[i].GetRect().x == width*m_size) || (m_Blocks[i].GetRect().x < 0) ||
-                    (field->IsBlock(m_Blocks[i].GetRect().x, m_Blocks[i].GetRect().y)))
-            {
-                Move(-dx, 0.0f);
-                return;
-            }
         }
     }
+}

@@ -16,7 +16,7 @@ public:
     void Render();
     void Init(float fFallingSpeed, unsigned int startX, unsigned int startY);
 
-    virtual void setStartPos(float fx, float fy) = 0;
+    virtual void setPos(float fx, float fy) = 0;
     virtual void loadBlockImage() = 0;
 
     template<uint width, uint height>
@@ -27,7 +27,7 @@ public:
     void Move(int Dir, bool bAutofire, CField<width, height> * const field);
 
     int GetSize() { return m_size;}
-    int GetNumFastDown() {return m_fDistFastDown/m_size;}
+    int GetNumBlocksFastDown() {return m_fDistFastDown/m_size;}
 
     bool isAlive() {return m_bIsAlive;}
 
@@ -35,7 +35,7 @@ protected:
     float m_fXPos;
     float m_fYPos;
 
-    int m_size;
+    unsigned int m_size;
 
     const int m_RotPoint;
     CSprite m_Blocks[4];
@@ -45,9 +45,9 @@ private:
     bool m_bIsAlive;
 
     float m_fFallingSpeed;
-    const float m_fFallingFastSpeed;
     float m_fDistFastDown;
 
+    const float m_fFallingFastSpeed;
     const float m_fAutoMoveSpeed;
 };
 

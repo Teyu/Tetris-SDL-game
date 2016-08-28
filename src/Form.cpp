@@ -38,7 +38,7 @@ void CForm::Init(float fFallingSpeed, unsigned int startX, unsigned int startY)
     loadBlockImage();
     m_size = m_Blocks[0].GetRect().h;
 
-    setStartPos(static_cast<float>(startX)*m_size, static_cast<float>(startY)*m_size);
+    setPos(static_cast<float>(startX)*m_size, static_cast<float>(startY)*m_size);
     m_fXPos = m_Blocks[0].GetRect().x;
     m_fYPos = m_Blocks[0].GetRect().y;
 }
@@ -49,7 +49,7 @@ render form
 
 void CForm::Render()
 {
-	for (int i=0; i < 4; i++)
+    for (size_t i=0; i < 4; i++)
 	{
         m_Blocks[i].Render();
     }
