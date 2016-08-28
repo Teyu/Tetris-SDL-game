@@ -3,9 +3,9 @@
 class CBar: public CForm
 {
 public:
-    void setStartPos()
+    void setStartPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - 2*m_size, y = m_size;
+        float x = fx - 2*m_size, y = fy;
         for (int i = 0; i < 4; x += m_size, i++)
         {
             m_Blocks[i].SetPos(x,y);
@@ -25,9 +25,9 @@ public:
 class CJ: public CForm
 {
 public:
-    void setStartPos()
+    void setStartPos(float fx, float fy)
     {
-        float x = m_fieldW/2, y = m_size;
+        float x = fx, y = fy;
         for (int i = 0; i < 4; i == 2 ? x -= m_size : y += m_size, i++)
         {
             m_Blocks[i].SetPos(x,y);
@@ -46,9 +46,9 @@ public:
 class CL: public CForm
 {
 public:
-    void setStartPos()
+    void setStartPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = m_size;
+        float x = fx - m_size, y = fy;
         for (int i = 0; i < 4; i == 2 ? x += m_size : y += m_size, i++)
         {
             m_Blocks[i].SetPos(x,y);
@@ -67,9 +67,9 @@ public:
 class CS: public CForm
 {
 public:
-    void setStartPos()
+    void setStartPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = 2*m_size;
+        float x = fx - m_size, y = fy;
         for (int i = 0; i < 4; (i%2 == 0) ? x += m_size : y -= m_size, i++)
         {
             m_Blocks[i].SetPos(x,y);
@@ -88,9 +88,9 @@ public:
 class CSquare: public CForm
 {
 public:
-    void setStartPos()
+    void setStartPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = m_size;
+        float x = fx - m_size, y = fy;
         for (int i = 0; i < 4; x += m_size, i++)
         {
             m_Blocks[i].SetPos(x,y);
@@ -115,9 +115,9 @@ public:
 class CT: public CForm
 {
 public:
-    void setStartPos()
+    void setStartPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size ,y = m_size;
+        float x = fx - m_size, y = fy;
         for (int i = 0; i < 4; x += m_size, i++)
         {
             m_Blocks[i].SetPos(x,y);
@@ -141,9 +141,9 @@ public:
 class CZ: public CForm
 {
 public:
-    void setStartPos()
+    void setStartPos(float fx, float fy)
     {
-        float x = m_fieldW/2 - m_size, y = m_size;
+        float x = fx - m_size, y = fy;
         for (int i = 0; i < 4; (i%2 == 0) ? x += m_size : y += m_size, i++)
         {
             m_Blocks[i].SetPos(x,y);

@@ -1,30 +1,31 @@
-#include "Player.h"
 
 /****************************************************************************************************************************************************
 update Player
 */
 
-void CPlayer::Update()
+template<uint width, uint height>
+void CPlayer::Update(CField<width,height> * const field)
 {
-    int Lines = g_pField->GetDelLines();
+    int Lines = field->GetDelLines();
 
-    ProcessRotateForm(SDLK_UP);
-    ProcessMoveForm(SDLK_RIGHT, SDLK_LEFT);
-    ProcessFormFall(SDLK_DOWN);
+    ProcessRotateForm(SDLK_UP, field);
+    ProcessMoveForm(SDLK_RIGHT, SDLK_LEFT, field);
+    ProcessFormFall(SDLK_DOWN, field);
 
-    g_pField->Update();
-    m_DelLines += g_pField->GetDelLines() - Lines;
+    field->Update();
+    m_DelLines += field->GetDelLines() - Lines;
 }
 
 /****************************************************************************************************************************************************
 rotate Form if defined Key is pressed (no autofire)
 */
 
-void CPlayer::ProcessRotateForm(int Key_ID)
+template<uint width, uint height>
+void CPlayer::ProcessRotateForm(int Key_ID, CField<width, height> * const field)
 {
     if ((g_pFramework->KeyDown(Key_ID)) && (!m_bKeyLock_Rotate) /*&& (m_TetrisForm != Square)*/)
     {
-        m_pForm->Rotate();
+        m_pForm->Rotate(field);
 
         m_bKeyLock_Rotate = true;
     }
@@ -38,13 +39,15 @@ void CPlayer::ProcessRotateForm(int Key_ID)
 move Form to the left or right if defined key is pressed, unlock autofire if key is pressed longer than defined buffer time
 */
 
-void CPlayer::ProcessMoveForm(int Key_ID_Right, int Key_ID_Left)
+template<uint width, uint height>
+void CPlayer::ProcessMoveForm(int Key_ID_Right, int Key_ID_Left, CField<width, height> * const field)
 {
-    ProcessMoveForm(Key_ID_Right, m_bKeyLock_MoveR, m_fAutoMoveCount_r);
-    ProcessMoveForm(Key_ID_Left, m_bKeyLock_MoveL, m_fAutoMoveCount_l);
+    ProcessMoveForm(Key_ID_Right, m_bKeyLock_MoveR, m_fAutoMoveCount_r, field);
+    ProcessMoveForm(Key_ID_Left, m_bKeyLock_MoveL, m_fAutoMoveCount_l, field);
 }
 
-void CPlayer::ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCount)
+template<uint width, uint height>
+void CPlayer::ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCount, CField<width, height> * const field)
 {
     if (g_pFramework->KeyDown(Key_ID))
     {
@@ -52,10 +55,10 @@ void CPlayer::ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCo
         {
             fAutoMoveCount += g_pTimer->GetElapsed();
             if (fAutoMoveCount > buffer)
-                m_pForm->Move(Key_ID, true);
+                m_pForm->Move(Key_ID, true, field);
         } else
         {
-            m_pForm->Move(Key_ID, false);
+            m_pForm->Move(Key_ID, false, field);
             bKeyLockMove = true;
         }
     } else
@@ -69,9 +72,10 @@ void CPlayer::ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCo
 form is constantly falling down, let the form fall down faster if defined key is pressed (autofire)
 */
 
-void CPlayer::ProcessFormFall(int Key_ID)
+template<uint width, uint height>
+void CPlayer::ProcessFormFall(int Key_ID, CField<width, height> * const field)
 {
-    if (m_pForm->Fall(g_pFramework->KeyDown(Key_ID) && !m_bKeyLock_FastDown) == false)
+    if (m_pForm->Fall(g_pFramework->KeyDown(Key_ID) && !m_bKeyLock_FastDown, field) == false)
     {
         m_bKeyLock_FastDown = true;
     }

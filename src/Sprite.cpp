@@ -85,14 +85,12 @@ render
 
 void CSprite::Render()
 {
-	try{
-		if ((m_Rect.x < 0) || (m_Rect.y < 0))
-		{
-            throw "could not render sprite, invalid position";
-		}
-	}catch(char* msg){
-		cerr << msg << endl;
-		
+    if ((m_Rect.x < 0) || (m_Rect.y < 0))
+    {
+        std::cout << "could not render sprite: (" <<
+                     m_Rect.x << "," << m_Rect.y <<
+                     ") is an invalid position" << std::endl;
+
 		g_pFramework->Quit();
 		exit(1);
 	}	

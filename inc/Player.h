@@ -11,7 +11,8 @@ public:
     CPlayer() : m_pForm(nullptr), m_Points(0), m_DelLines(0), m_level(1)
     { }
 
-    void Update();
+    template<uint width, uint height>
+    void Update(CField<width, height> * const field);
 
     void passForm(CForm* &Form){m_pForm = Form;}
     CForm* GetForm() {return m_pForm;}
@@ -24,11 +25,14 @@ public:
     unsigned GetDelLines() {return m_DelLines;}
 
 private:
-    void ProcessRotateForm(int Key_ID);
-    void ProcessMoveForm(int Key_ID_Right, int Key_ID_Left);
-    void ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCount);
-    void ProcessFormFall(int Key_ID); //TODO:make function Form::Update for falling process
-
+    template<uint width, uint height>
+    void ProcessRotateForm(int Key_ID, CField<width, height> * const field);
+    template<uint width, uint height>
+    void ProcessMoveForm(int Key_ID_Right, int Key_ID_Left, CField<width, height> * const field);
+    template<uint width, uint height>
+    void ProcessMoveForm(int Key_ID, bool &bKeyLockMove, float &fAutoMoveCount, CField<width, height> * const field);
+    template<uint width, uint height>
+    void ProcessFormFall(int Key_ID, CField<width, height> * const field); //TODO:make function Form::Update for falling process
     CForm *m_pForm;
 
     unsigned m_Points;
@@ -44,5 +48,7 @@ private:
     float m_fAutoMoveCount_r;
     const float buffer = 0.2f;
 };
+
+#include "../src/Player.inl"
 
 #endif
