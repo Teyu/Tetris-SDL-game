@@ -46,54 +46,35 @@ void CSprite::Load( const string sFilename)
 }
 
 /****************************************************************************************************************************************************
-set the position
+set the position (negative positions allowed)
 */
 
 void CSprite::SetPos( float fXPos, float fYPos)
 {
-//TODO: thow error only in debug version 
-	/*try{ 
-		if (fXPos< 0)
-		{
-			throw "Tried to set Sprite Position. fXPos Position negative!" ;
-		}else if (fXPos >= 300 )//g_pFramework->GetScreenWidth()
-		{
-			throw "Tried to set Sprite Position. fXPos larger than screen!";
-		}
-		if (fYPos < 0)
-		{
-			throw "Tried to set Sprite Position. fYPos Position negative!";
-		}else if (fYPos > g_pFramework->GetScreenHeight())
-		{
-			throw "Tried to set Sprite Position. fYPos larger than screen!";
-		}
-	}catch(char* msg){
-		cerr << msg << endl;
-		
-		g_pFramework->Quit();
-		exit(1);
-	}	*/
-
 	//sprite moves only when next integer is exceeded. This way its easier to control the speed of movement 
 	m_Rect.x = static_cast<int>(fXPos);
 	m_Rect.y = static_cast<int>(fYPos);
 }
 
 /****************************************************************************************************************************************************
-render 
+render (negative positions not allowed)
 */
 
 void CSprite::Render()
 {
-    if ((m_Rect.x < 0) || (m_Rect.y < 0))
+    try
     {
-        std::cout << "could not render sprite: (" <<
-                     m_Rect.x << "," << m_Rect.y <<
-                     ") is an invalid position" << std::endl;
+        if ((m_Rect.x < 0) || (m_Rect.y < 0))
+        {
+            throw "could not render sprite: invalid position";
+        }
+    }catch(const char * msg)
+    {
+        cerr << msg << endl;
 
-		g_pFramework->Quit();
-		exit(1);
-	}	
+        g_pFramework->Quit();
+        exit(1);
+    }
 
 	SDL_BlitSurface(m_pImage, NULL, m_pScreen, &m_Rect);
 }

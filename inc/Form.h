@@ -8,11 +8,14 @@
 
 using namespace std;
 
+enum Form{Bar, Square, L, J, Z, S, T};
+
 class CForm 
 {
 public:
     CForm();
     virtual ~CForm();
+
     void Render();
     void Init(float fFallingSpeed, unsigned int startX, unsigned int startY);
 

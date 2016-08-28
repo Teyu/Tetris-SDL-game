@@ -17,15 +17,13 @@ public:
 private:
     void ProcessEvents();
     CForm*  spawnForm(float fSpeedOfFall);
-
-    enum Form{Bar, Square, L, J, Z, S, T};
-    Form m_TetrisForm;
+    void calcPointsAndLevel(CPlayer * const player, int numDelLines);
 
     CForm *m_pForm;
     CPlayer *m_pPlayer;
     CField<10u,20u> *m_pField;
 
-    bool m_bGameRun;
+    bool m_bRunGame;
 
     float m_fInitSpeed;
 };

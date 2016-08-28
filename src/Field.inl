@@ -2,7 +2,6 @@
 /****************************************************************************************************************************************************
 constructor
 */
-
 template<uint width, uint height>
 CField<width,height>::CField()
 {
@@ -19,10 +18,8 @@ void CField<width,height>::Init(unsigned const Bsize)
     m_DelLines = 0;
 
     //initialising m_field
-    //m_field.resize(width);
     for (size_t i=0; i < width ; i++)
     {
-        //m_field[i].resize(height);
         for (size_t j=0; j < height; j++)
         {
             m_field[i][j] = nullptr;
