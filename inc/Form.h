@@ -8,6 +8,8 @@
 
 using namespace std;
 
+enum Form{Bar, Square, L, J, Z, S, T};
+
 class CForm 
 {
 public:

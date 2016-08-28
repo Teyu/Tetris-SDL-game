@@ -3,14 +3,18 @@
 #include "Framework.h"
 #include "Game.h"
 
+#include <TetrisConfig.h>
+
 #ifdef _WIN32
 #undef main
 #endif
 
 int main()
 {
+    std::cout << "Tetris Version " << TETRIS_VERSION_MAJOR << "." << TETRIS_VERSION_MINOR << std::endl;
+
 	if (g_pFramework->Init(500, 600, 16, false) == false)
-		return 0;
+        return 1;
 
     CGame Game;
 

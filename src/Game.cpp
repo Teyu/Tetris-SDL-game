@@ -26,7 +26,7 @@ void CGame::Init(float fInitSpeed)
 
     g_pField->Init(m_pForm->GetSize());
 
-    m_bGameRun = true;
+    m_bRunGame = true;
 }
 
 /****************************************************************************************************************************************************
@@ -35,7 +35,7 @@ control, update and render entities
 
 void CGame::Run()
 {
-	while(m_bGameRun == true)
+    while(m_bRunGame == true)
     {
         ProcessEvents();
 
@@ -47,37 +47,14 @@ void CGame::Run()
 
         if (!m_pPlayer->GetForm()->isAlive())
         {
-            Lines = m_pPlayer->GetDelLines() - Lines;
-            switch(Lines)
-            {
-                case 0:
-                    break;
-                case 1:
-                    m_pPlayer->IncreasePoints(40*m_pPlayer->GetLevel());
-                    break;
-                case 2:
-                    m_pPlayer->IncreasePoints(100*m_pPlayer->GetLevel());
-                    break;
-                case 3:
-                    m_pPlayer->IncreasePoints(300*m_pPlayer->GetLevel());
-                    break;
-                case 4:
-                    m_pPlayer->IncreasePoints(1200*m_pPlayer->GetLevel());
-                    break;
-                }
-
-            if (m_pPlayer->GetDelLines()/10 == m_pPlayer->GetLevel())
-            {
-                m_pPlayer->IncreaseLevel();
-            }
-
-            m_pPlayer->IncreasePoints(m_pPlayer->GetForm()->GetNumFastDown());
+            calcPointsAndLevel(m_pPlayer, m_pPlayer->GetDelLines() - Lines);
 
             //each level speed of fall increases by + 5
             m_pForm = spawnForm(m_fInitSpeed + 5*m_pPlayer->GetLevel());
             m_pPlayer->passForm(m_pForm);
         }
 
+        //m_pForm->Update()
         m_pForm->Render();
 
         g_pField->Update();
@@ -88,6 +65,40 @@ void CGame::Run()
 
         g_pFramework->Flip();
 	}
+}
+
+
+/****************************************************************************************************************************************************
+calculate points and level of passed player depending on deleted lines
+*/
+
+void CGame::calcPointsAndLevel(CPlayer * const player, int numDelLines)
+{
+    switch(numDelLines)
+    {
+        case 0:
+            break;
+        case 1:
+            player->IncreasePoints(40*player->GetLevel());
+            break;
+        case 2:
+            player->IncreasePoints(100*player->GetLevel());
+            break;
+        case 3:
+            player->IncreasePoints(300*player->GetLevel());
+            break;
+        case 4:
+            player->IncreasePoints(1200*player->GetLevel());
+            break;
+        }
+
+    if (player->GetDelLines()/10 == player->GetLevel())
+    {
+        player->IncreaseLevel();
+    }
+
+    player->IncreasePoints(player->GetForm()->GetNumFastDown());
+
 }
 
 /****************************************************************************************************************************************************
@@ -113,23 +124,23 @@ verify if a button is pressed to quit the game
 void CGame::ProcessEvents()
 {
 	SDL_Event Event;
-		if (SDL_PollEvent ( &Event))
-		{
-			switch(Event.type)
-			{
-			case (SDL_QUIT):
-				{
-					m_bGameRun = false;
-				} break;
-			case (SDL_KEYDOWN):
-				{
-					if (Event.key.keysym.sym == SDLK_ESCAPE)
-					{
-						m_bGameRun = false;
-					}
-				}break;
-			}
-		}
+    if (SDL_PollEvent ( &Event))
+    {
+        switch(Event.type)
+        {
+        case (SDL_QUIT):
+            {
+                m_bRunGame = false;
+            } break;
+        case (SDL_KEYDOWN):
+            {
+                if (Event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    m_bRunGame = false;
+                }
+            }break;
+        }
+    }
 }
 
 
@@ -139,33 +150,31 @@ spawn new form
 
 CForm* CGame::spawnForm(float fSpeedOfFall)
 {
-    m_TetrisForm = static_cast<Form>(rand()%7);
     CForm* newForm;
-
-            switch(m_TetrisForm)
-			{
-			case Bar:
-                newForm = new CBar;
-				break;
-			case Square:
-                newForm = new CSquare;
-				break;
-			case L:
-                newForm = new CL;
-				break;
-			case J:
-                newForm = new CJ;
-				break;
-			case Z:
-                newForm = new CZ;
-				break;
-			case S:
-                newForm = new CS;
-				break;
-			case T:
-                newForm = new CT;
-				break;
-			}
+    switch(static_cast<Form>(rand()%7))
+    {
+        case Bar:
+            newForm = new CBar;
+            break;
+        case Square:
+            newForm = new CSquare;
+            break;
+        case L:
+            newForm = new CL;
+            break;
+        case J:
+            newForm = new CJ;
+            break;
+        case Z:
+            newForm = new CZ;
+            break;
+        case S:
+            newForm = new CS;
+            break;
+        case T:
+            newForm = new CT;
+            break;
+    }
 
     newForm->Init(fSpeedOfFall);
 
