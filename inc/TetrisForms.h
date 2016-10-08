@@ -19,6 +19,7 @@ public:
             m_Blocks[i].Load("data/RedBlock.bmp");
         }
     }
+    Form GetType() {return Bar;}
     ~CBar(){}
 };
 
@@ -39,6 +40,7 @@ public:
             m_Blocks[i].Load("data/VioletBlock.bmp");
         }
     }
+    Form GetType() {return J;}
     ~CJ(){}
 };
 
@@ -60,6 +62,7 @@ public:
             m_Blocks[i].Load("data/BlueBlock.bmp");
         }
     }
+    Form GetType() {return L;}
     ~CL(){}
 };
 
@@ -81,6 +84,7 @@ public:
             m_Blocks[i].Load("data/YellowBlock.bmp");
         }
     }
+    Form GetType() {return S;}
     ~CS(){}
 };
 
@@ -108,6 +112,7 @@ public:
         }
     }
     void Rotate() {}
+    Form GetType() {return Square;}
     ~CSquare(){}
 };
 
@@ -134,6 +139,7 @@ public:
             m_Blocks[i].Load("data/TurkisBlock.bmp");
         }
     }
+    Form GetType() {return T;}
     ~CT(){}
 };
 
@@ -155,5 +161,6 @@ public:
             m_Blocks[i].Load("data/GreenBlock.bmp");
         }
     }
+    Form GetType() {return Z;}
     ~CZ(){}
 };

@@ -1,5 +1,4 @@
 #include "Game.h"
-#include <typeinfo>
 
 /****************************************************************************************************************************************************
 constructor
@@ -18,14 +17,14 @@ void CGame::Init(float fInitSpeed)
 	time_t t;
 	srand( time(&t) );
 
-    m_fInitSpeed = fInitSpeed;
+    m_fSpeed = fInitSpeed;
 
     m_pPlayer = new CPlayer();
 
-    m_pForm = spawnForm(m_fInitSpeed);
+    spawnForm();
     m_pPlayer->passForm(m_pForm);
 
-    m_pField = new CField<10u,20u>();
+    m_pField = new CField<g_fieldWidth,g_fieldHeight>();
     m_pField->Init(m_pForm->GetSize());
 
     m_bRunGame = true;
@@ -51,8 +50,7 @@ void CGame::Run()
         {
             calcPointsAndLevel(m_pPlayer, m_pPlayer->GetDelLines() - Lines);
 
-            //each level speed of fall increases by + 5
-            m_pForm = spawnForm(m_fInitSpeed + 5*m_pPlayer->GetLevel());
+            spawnForm();
             m_pPlayer->passForm(m_pForm);
         }
 
@@ -96,6 +94,9 @@ void CGame::calcPointsAndLevel(CPlayer * const player, int numDelLines)
     if (player->GetDelLines()/10 == player->GetLevel())
     {
         player->IncreaseLevel();
+
+        //each level speed of fall increases by + 5
+        m_fSpeed += 5*m_pPlayer->GetLevel();
     }
 
     player->IncreasePoints(player->GetForm()->GetNumBlocksFastDown());
@@ -146,7 +147,7 @@ void CGame::ProcessEvents()
         }
     }
 
-    if (typeid(*m_pForm) != typeid(CSquare))
+    if (m_pForm->GetType() != Square)
     {
         m_pPlayer->ProcessRotateForm(SDLK_UP, m_pField);
     }
@@ -159,35 +160,10 @@ void CGame::ProcessEvents()
 spawn new form
 */
 
-CForm* CGame::spawnForm(float fSpeedOfFall)
+void CGame::spawnForm()
 {
-    CForm* newForm;
-    switch(static_cast<Form>(rand()%7))
-    {
-        case Bar:
-            newForm = new CBar;
-            break;
-        case Square:
-            newForm = new CSquare;
-            break;
-        case L:
-            newForm = new CL;
-            break;
-        case J:
-            newForm = new CJ;
-            break;
-        case Z:
-            newForm = new CZ;
-            break;
-        case S:
-            newForm = new CS;
-            break;
-        case T:
-            newForm = new CT;
-            break;
-    }
+    m_pForm = CForm::create(static_cast<Form>(rand()%7));
 
-    newForm->Init(fSpeedOfFall, 5u, 1u);
-
-    return newForm;
+    //form starts at the upper range in the middle
+    m_pForm->Init(m_fSpeed, g_fieldWidth/2, 1u);
 }

@@ -14,6 +14,7 @@ class CForm
 {
 public:
     CForm();
+    static CForm * create (Form shape);
     virtual ~CForm();
 
     void Render();
@@ -23,12 +24,13 @@ public:
     virtual void loadBlockImage() = 0;
 
     template<uint width, uint height>
-    bool Fall(bool bFast, CField<width, height> * const field);
+    bool Fall(bool bFast, CField<width, height> * const field); //TODO: make two functions
     template<uint width, uint height>
     void Rotate(CField<width, height> * const field);
     template<uint width, uint height>
-    void Move(int Dir, bool bAutofire, CField<width, height> * const field);
+    void Move(int Dir, bool bAutofire, CField<width, height> * const field); //TODO: make two functions out of this
 
+    virtual Form GetType() = 0;
     int GetSize() { return m_size;}
     int GetNumBlocksFastDown() {return m_fDistFastDown/m_size;}
 

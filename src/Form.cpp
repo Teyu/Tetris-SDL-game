@@ -1,4 +1,5 @@
 #include "Form.h"
+#include "TetrisForms.h"
 
 /****************************************************************************************************************************************************
 constructor
@@ -16,6 +17,31 @@ CForm::CForm() :
     m_fAutoMoveSpeed(500.0f)
 
 {
+}
+
+/****************************************************************************************************************************************************
+returns a specific kind of form
+*/
+
+CForm * CForm::create(Form shape)
+{
+    switch(shape)
+    {
+        case Bar:
+            return new CBar;
+        case Square:
+            return new CSquare;
+        case L:
+            return new CL;
+        case J:
+            return new CJ;
+        case Z:
+            return new CZ;
+        case S:
+            return new CS;
+        case T:
+            return new CT;
+    }
 }
 
 /****************************************************************************************************************************************************

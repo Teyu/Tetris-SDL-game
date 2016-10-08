@@ -5,6 +5,9 @@
 #include <ctime>
 #include <cstdlib>
 
+static const uint g_fieldWidth = 10u;
+static const uint g_fieldHeight = 20u;
+
 class CGame
 {
 public:
@@ -17,14 +20,14 @@ public:
 private:
     void ProcessEvents();
     void calcPointsAndLevel(CPlayer * const player, int numDelLines);
-    CForm*  spawnForm(float fSpeedOfFall);
+    void spawnForm();
+
     CForm *m_pForm;
     CPlayer *m_pPlayer;
-    CField<10u,20u> *m_pField;
+    CField<g_fieldWidth,g_fieldHeight> *m_pField;
 
     bool m_bRunGame;
-
-    float m_fInitSpeed;
+    float m_fSpeed;
 };
 
 #endif
