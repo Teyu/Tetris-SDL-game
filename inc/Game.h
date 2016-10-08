@@ -18,9 +18,10 @@ private:
     void ProcessEvents();
     void calcPointsAndLevel(CPlayer * const player, int numDelLines);
     CForm*  spawnForm(float fSpeedOfFall);
-
+    void calcPointsAndLevel(CPlayer * const player, int numDelLines);
     CForm *m_pForm;
     CPlayer *m_pPlayer;
+    CField<10u,20u> *m_pField;
 
     bool m_bRunGame;
 

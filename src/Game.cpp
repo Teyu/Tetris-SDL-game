@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <typeinfo>
 
 /****************************************************************************************************************************************************
 constructor
@@ -24,7 +25,8 @@ void CGame::Init(float fInitSpeed)
     m_pForm = spawnForm(m_fInitSpeed);
     m_pPlayer->passForm(m_pForm);
 
-    g_pField->Init(m_pForm->GetSize());
+    m_pField = new CField<10u,20u>();
+    m_pField->Init(m_pForm->GetSize());
 
     m_bRunGame = true;
 }
@@ -41,9 +43,9 @@ void CGame::Run()
 
         g_pFramework->Update();
         g_pFramework->Clear();
-
+        
         int Lines = m_pPlayer->GetDelLines();
-        m_pPlayer->Update();
+        m_pPlayer->Update(m_pField);
 
         if (!m_pPlayer->GetForm()->isAlive())
         {
@@ -54,11 +56,10 @@ void CGame::Run()
             m_pPlayer->passForm(m_pForm);
         }
 
-        //m_pForm->Update()
         m_pForm->Render();
 
-        g_pField->Update();
-        g_pField->Render();
+        m_pField->Update();
+        m_pField->Render();
 
         //TO BE REMOVED LATER (a class CMenu is yet to be implemented)
         g_pFramework->RenderMenu(m_pPlayer->GetPoints(), m_pPlayer->GetLevel(), m_pPlayer->GetDelLines());
@@ -97,7 +98,7 @@ void CGame::calcPointsAndLevel(CPlayer * const player, int numDelLines)
         player->IncreaseLevel();
     }
 
-    player->IncreasePoints(player->GetForm()->GetNumFastDown());
+    player->IncreasePoints(player->GetForm()->GetNumBlocksFastDown());
 
 }
 
@@ -115,6 +116,9 @@ void CGame::Quit()
 
     delete(m_pPlayer);
     m_pPlayer = NULL;
+
+    delete(m_pField);
+    m_pField = NULL;
 }
 
 /****************************************************************************************************************************************************
@@ -141,6 +145,13 @@ void CGame::ProcessEvents()
             }break;
         }
     }
+
+    if (typeid(*m_pForm) != typeid(CSquare))
+    {
+        m_pPlayer->ProcessRotateForm(SDLK_UP, m_pField);
+    }
+    m_pPlayer->ProcessMoveForm(SDLK_RIGHT, SDLK_LEFT, m_pField);
+    m_pPlayer->ProcessFormFall(SDLK_DOWN, m_pField);
 }
 
 
@@ -176,7 +187,7 @@ CForm* CGame::spawnForm(float fSpeedOfFall)
             break;
     }
 
-    newForm->Init(fSpeedOfFall);
+    newForm->Init(fSpeedOfFall, 5u, 1u);
 
     return newForm;
 }

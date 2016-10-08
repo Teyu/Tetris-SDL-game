@@ -15,17 +15,22 @@ class CForm
 public:
     CForm();
     virtual ~CForm();
-    void Render();
-    void Init(float fFallingSpeed);
 
-    virtual void setStartPos() = 0;
+    void Render();
+    void Init(float fFallingSpeed, unsigned int startX, unsigned int startY);
+
+    virtual void setPos(float fx, float fy) = 0;
     virtual void loadBlockImage() = 0;
 
-    bool Fall(bool bFast);
-    virtual void Rotate();
-    void Move(int Dir, bool bAutofire);
+    template<uint width, uint height>
+    bool Fall(bool bFast, CField<width, height> * const field);
+    template<uint width, uint height>
+    void Rotate(CField<width, height> * const field);
+    template<uint width, uint height>
+    void Move(int Dir, bool bAutofire, CField<width, height> * const field);
+
     int GetSize() { return m_size;}
-    int GetNumFastDown() {return m_fDistFastDown/m_size;}
+    int GetNumBlocksFastDown() {return m_fDistFastDown/m_size;}
 
     bool isAlive() {return m_bIsAlive;}
 
@@ -33,9 +38,7 @@ protected:
     float m_fXPos;
     float m_fYPos;
 
-    int m_size;
-    int m_fieldW;
-    int m_fieldH;
+    unsigned int m_size;
 
     const int m_RotPoint;
     CSprite m_Blocks[4];
@@ -45,10 +48,12 @@ private:
     bool m_bIsAlive;
 
     float m_fFallingSpeed;
-    const float m_fFallingFastSpeed;
     float m_fDistFastDown;
 
+    const float m_fFallingFastSpeed;
     const float m_fAutoMoveSpeed;
 };
+
+#include "../src/Form.inl"
 
 #endif
