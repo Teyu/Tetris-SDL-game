@@ -4,9 +4,8 @@ returns true if it succesfully fell down and false if it was not able to fall do
 */
 
 template<uint width, uint height>
-bool CForm::Fall(bool bFast, CField<width, height> * const field)
+bool CForm::Fall(float dy, CField<width, height> * const field)
 {
-    float dy = (bFast ? m_fFallingFastSpeed : m_fFallingSpeed) * g_pTimer->GetElapsed();
     Move(0.0f, dy);
 
     for (size_t i = 0; i < 4; i++)
@@ -24,9 +23,30 @@ bool CForm::Fall(bool bFast, CField<width, height> * const field)
          }
     }
 
-    if (m_bIsAlive)
-        m_fDistFastDown = (bFast ? m_fDistFastDown + dy : 0);
+    return true;
+}
 
+template<uint width, uint height>
+bool CForm::Fall(CField<width, height> * const field)
+{
+    float dy = m_fFallingSpeed * g_pTimer->GetElapsed();
+
+    if (!Fall(dy, field))
+        return false;
+
+    m_fDistFastDown = 0;
+    return true;
+}
+
+template<uint width, uint height>
+bool CForm::FallFast(CField<width, height> * const field)
+{
+    float dy = m_fFallingFastSpeed * g_pTimer->GetElapsed();
+
+    if (!Fall(dy, field))
+        return false;
+
+    m_fDistFastDown += dy;
     return true;
 }
 

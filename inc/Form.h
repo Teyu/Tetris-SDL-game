@@ -24,7 +24,11 @@ public:
     virtual void loadBlockImage() = 0;
 
     template<uint width, uint height>
-    bool Fall(bool bFast, CField<width, height> * const field); //TODO: make two functions
+    bool Fall(CField<width, height> * const field);
+    //TODO: use protected Fall function instead -> process speed of fall within a new class CControls which is part of CPlayer
+    //-> replace CPlayer->ProcessFall with the appropiate CControl class
+    template<uint width, uint height>
+    bool FallFast(CField<width, height> * const field);
     template<uint width, uint height>
     void Rotate(CField<width, height> * const field);
     template<uint width, uint height>
@@ -37,6 +41,9 @@ public:
     bool isAlive() {return m_bIsAlive;}
 
 protected:
+    template<uint width, uint height>
+    bool Fall(float dy, CField<width, height> * const field);
+
     float m_fXPos;
     float m_fYPos;
 

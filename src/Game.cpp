@@ -19,7 +19,11 @@ void CGame::Init(float fInitSpeed)
 
     m_fSpeed = fInitSpeed;
 
+    CControls controls;
+    controls.Init({SDLK_RIGHT, SDLK_LEFT, SDLK_DOWN, SDLK_UP});
+
     m_pPlayer = new CPlayer();
+    m_pPlayer->Init(controls);
 
     spawnForm();
     m_pPlayer->passForm(m_pForm);
@@ -146,13 +150,6 @@ void CGame::ProcessEvents()
             }break;
         }
     }
-
-    if (m_pForm->GetType() != Square)
-    {
-        m_pPlayer->ProcessRotateForm(SDLK_UP, m_pField);
-    }
-    m_pPlayer->ProcessMoveForm(SDLK_RIGHT, SDLK_LEFT, m_pField);
-    m_pPlayer->ProcessFormFall(SDLK_DOWN, m_pField);
 }
 
 
