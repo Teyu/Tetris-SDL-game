@@ -2,7 +2,6 @@
 #define FIELD_H
 
 #include "Sprite.h"
-#include <vector>
 #include <array>
 
 using namespace std;

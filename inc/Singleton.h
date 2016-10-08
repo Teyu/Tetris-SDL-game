@@ -20,16 +20,6 @@ public:
         return (m_pSingleton);
     }
 
-    //create object with non-default-constructor
-    inline static T* Get(unsigned init1, unsigned init2)
-    {
-        if (!m_pSingleton)
-        {
-            m_pSingleton = new T(init1, init2);
-        }
-        return (m_pSingleton);
-    }
-
     static void Del()
     {
         if (m_pSingleton)
