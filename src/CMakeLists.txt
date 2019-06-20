@@ -22,7 +22,6 @@ target_link_libraries(Tetris
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 include(specifySDLpaths)
-include(specifySDLTTFpaths)
 
 if(TETRIS_BUILD_TESTS)
   add_subdirectory(tests)

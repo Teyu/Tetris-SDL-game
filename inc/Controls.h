@@ -6,32 +6,35 @@
 
 struct KeySettings
 {
-    uint MoveRight;
-    uint MoveLeft;
-    uint FastDown;
-    uint Rotate;
+    uint32_t MoveRight;
+    uint32_t MoveLeft;
+    uint32_t FastDown;
+    uint32_t Rotate;
 };
 
 class CControls
 {
 public:
-    void Init(KeySettings keys)
+    void Init (KeySettings keys)
     {
         Keys = keys;
     }
 
-    template<uint width, uint height>
-    void ProcessRotate(CForm &form, CField<width, height> &field);
-    template<uint width, uint height>
-    void ProcessMove(CForm &form, CField<width, height> &field);
-    template<uint width, uint height>
-    void ProcessFastDown(CForm &form, CField<width, height> &field);
+    template<uint32_t width, uint32_t height>
+    void ProcessRotate (CForm &form, CField<width, height> &field);
+    template<uint32_t width, uint32_t height>
+    void ProcessMove (CForm &form, CField<width, height> &field);
+    template<uint32_t width, uint32_t height>
+    void ProcessFastDown (CForm &form, CField<width, height> &field);
 
-    KeySettings getKeySettings() { return Keys;}
+    KeySettings getKeySettings()
+    {
+        return Keys;
+    }
 
 private:
-    template<uint width, uint height>
-    void ProcessMove(uint KeyID, bool &bKeyLockMove, float &fAutoMoveCount, CForm &form, CField<width, height> &field);
+    template<uint32_t width, uint32_t height>
+    void ProcessMove (uint32_t KeyID, bool &bKeyLockMove, float &fAutoMoveCount, CForm &form, CField<width, height> &field);
 
     KeySettings Keys;
 

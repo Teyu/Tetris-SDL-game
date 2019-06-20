@@ -8,41 +8,50 @@
 
 using namespace std;
 
-enum Form{Bar, Square, L, J, Z, S, T};
+enum Form {Bar, Square, L, J, Z, S, T};
 
-class CForm 
+class CForm
 {
 public:
     CForm();
-    static CForm * create (Form shape);
+    static CForm *create (Form shape);
     virtual ~CForm();
 
     void Render();
-    void Init(float fFallingSpeed, unsigned int startX, unsigned int startY);
+    void Init (float fFallingSpeed, unsigned int startX, unsigned int startY);
 
-    virtual void setPos(float fx, float fy) = 0;
+    virtual void setPos (float fx, float fy) = 0;
     virtual void loadBlockImage() = 0;
 
-    template<uint width, uint height>
-    bool Fall(CField<width, height> * const field);
+    template<uint32_t width, uint32_t height>
+    bool Fall (CField<width, height> *const field);
     //TODO: use protected Fall function instead -> process speed of fall within a new class CControls which is part of CPlayer
     //-> replace CPlayer->ProcessFall with the appropiate CControl class
-    template<uint width, uint height>
-    bool FallFast(CField<width, height> * const field);
-    template<uint width, uint height>
-    void Rotate(CField<width, height> * const field);
-    template<uint width, uint height>
-    void Move(int Dir, bool bAutofire, CField<width, height> * const field); //TODO: make two functions out of this
+    template<uint32_t width, uint32_t height>
+    bool FallFast (CField<width, height> *const field);
+    template<uint32_t width, uint32_t height>
+    void Rotate (CField<width, height> *const field);
+    template<uint32_t width, uint32_t height>
+    void Move (int Dir, bool bAutofire, CField<width, height> *const field); //TODO: make two functions out of this
 
     virtual Form GetType() = 0;
-    int GetSize() { return m_size;}
-    int GetNumBlocksFastDown() {return m_fDistFastDown/m_size;}
+    int GetSize()
+    {
+        return m_size;
+    }
+    int GetNumBlocksFastDown()
+    {
+        return m_fDistFastDown / m_size;
+    }
 
-    bool isAlive() {return m_bIsAlive;}
+    bool isAlive()
+    {
+        return m_bIsAlive;
+    }
 
 protected:
-    template<uint width, uint height>
-    bool Fall(float dy, CField<width, height> * const field);
+    template<uint32_t width, uint32_t height>
+    bool Fall (float dy, CField<width, height> *const field);
 
     float m_fXPos;
     float m_fYPos;
@@ -53,7 +62,7 @@ protected:
     CSprite m_Blocks[4];
 
 private:
-    void Move(float dx, float dy);
+    void Move (float dx, float dy);
     bool m_bIsAlive;
 
     float m_fFallingSpeed;

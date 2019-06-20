@@ -18,13 +18,22 @@ public:
     void Update();
     void Clear();
     void Flip();
-    bool KeyDown( int Key_ID);
-    SDL_Surface *GetScreen() { return m_pScreen;}
-    int GetScreenWidth() { return m_ScreenW;}
-    int GetScreenHeight() { return m_ScreenH;}
+    bool KeyDown (int Key_ID);
+    SDL_Surface *GetScreen()
+    {
+        return m_pScreen;
+    }
+    int GetScreenWidth()
+    {
+        return m_ScreenW;
+    }
+    int GetScreenHeight()
+    {
+        return m_ScreenH;
+    }
 
     //TEST (defenitive remove later-> CMenu yet to be implemented)
-    void RenderMenu(int Points, int Level, int DelLines){
+    /*void RenderMenu(int Points, int Level, int DelLines){
         SDL_Rect Pos_points;
         SDL_Rect Pos_level;
         SDL_Rect Pos_lines;
@@ -90,7 +99,7 @@ public:
               {
                   cout<< "SDL_BlitSurface() Failed: " << SDL_GetError() << endl;
               }
-    }
+    }*/
     //ENDOFTEST
 
 private:
@@ -98,7 +107,6 @@ private:
     SDL_Surface *m_ptext_points;
     SDL_Surface *m_ptext_level;
     SDL_Surface *m_ptext_lines;
-    TTF_Font *font;
     SDL_Color text_color;
     Uint8 *m_pKeystate;
     int m_ScreenW;

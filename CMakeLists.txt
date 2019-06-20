@@ -11,8 +11,6 @@ endif()
 option(TETRIS_BUILD_TESTS "Build tetris unit tests." OFF)
 
 enable_testing()
-
-file(COPY ${CMAKE_SOURCE_DIR}/fonts/FreeSans.ttf DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR}/src)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "CLANG")
