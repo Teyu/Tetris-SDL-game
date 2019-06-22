@@ -35,7 +35,7 @@ bool CFramework::Init (int ScreenWidth, int ScreenHeight, int ColorDepth, bool b
         return false;
     }
 
-    SDL_WM_SetCaption ("Tetris", "Tetris");
+    SDL_WM_SetCaption ("Sylwia", "Sylwia");
 
     m_pKeystate = SDL_GetKeyState (NULL);
 
@@ -88,17 +88,5 @@ display on screen
 
 void CFramework::Flip()
 {
-    //dividing line
-    SDL_Rect LineBlock;
-    LineBlock.x = 300;
-    LineBlock.y = 0;
-    LineBlock.w = 2;
-    LineBlock.h = 2;
-    for (int i = 0; i < (600 / 2); i++)
-    {
-        SDL_FillRect (m_pScreen, &LineBlock, SDL_MapRGB (m_pScreen->format, 255, 255, 255));
-        LineBlock.y += 2;
-    }
-
     SDL_Flip (m_pScreen);
 }

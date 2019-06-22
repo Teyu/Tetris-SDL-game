@@ -2,7 +2,7 @@
 #include "Framework.h"
 #include "Game.h"
 
-#include <TetrisConfig.h>
+#include <SylwiaConfig.h>
 
 #ifdef _WIN32
 #undef main
@@ -10,7 +10,7 @@
 
 int main()
 {
-    std::cout << "Tetris Version " << TETRIS_VERSION_MAJOR << "." << TETRIS_VERSION_MINOR << std::endl;
+    std::cout << "Sylwia Version " << SYLWIA_VERSION_MAJOR << "." << SYLWIA_VERSION_MINOR << std::endl;
 
     if (g_pFramework->Init (500, 600, 16, false) == false)
     {

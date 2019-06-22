@@ -5,7 +5,7 @@ if(SDL_FOUND)
     ${SDL_INCLUDE_DIR}
     ${SDL_INCLUDE_DIR}/SDL
   )
-  target_link_libraries(Tetris
+  target_link_libraries(Sylwia
     ${SDL_LIBRARY}
   )
 endif()
