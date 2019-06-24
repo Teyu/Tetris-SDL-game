@@ -23,5 +23,19 @@ configure_file (
 )
 include_directories(${PROJECT_BINARY_DIR})
 
+#SDL
+if(WIN32) #WINDOWS (for both 32Bit and 64Bit)
+    set(SDLMAIN_LIBRARY "${CMAKE_SOURCE_DIR}/thirdparty/SDL/lib/Windows/x86/SDLmain.lib")
+    set(SDL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/thirdparty/SDL/include")
+    set(SDL_LIBRARY "${CMAKE_SOURCE_DIR}/thirdparty/SDL/lib/Windows/x86/SDL.lib")
+elseif (UNIX) #LINUX 
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+    include(specifySDLpaths)
+	
+    set(SDLMAIN_LIBRARY "")
+endif()
+
+include_directories(${SDL_INCLUDE_DIR})
+
 add_subdirectory(src)
 add_subdirectory(thirdparty)
