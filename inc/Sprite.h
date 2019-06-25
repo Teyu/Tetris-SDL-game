@@ -25,5 +25,4 @@ private:
     string m_sImageFile;
 };
 
-
-#endif
+#endif //SPRITE_H

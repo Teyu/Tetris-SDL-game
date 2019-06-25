@@ -21,6 +21,15 @@ target_link_libraries(Sylwia
   ${SDLMAIN_LIBRARY}
 )
 
+set_target_properties(Sylwia
+  PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+
+INSTALL (TARGETS Sylwia
+  DESTINATION bin
+)
+
 if(SYLWIA_BUILD_TESTS)
   add_subdirectory(tests)
 endif()

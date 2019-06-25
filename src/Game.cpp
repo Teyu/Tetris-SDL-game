@@ -2,6 +2,17 @@
 #include "Framework.h"
 #include "Sprite.h"
 
+#include "SylwiaConfig.h"
+
+std::string getDataPath(const char * fileName)
+{
+	std::string fullPath = SYLWIA_DATA_PATH;
+	fullPath += "/";
+	fullPath += fileName;
+
+	return fullPath;
+}
+
 /****************************************************************************************************************************************************
 constructor
 */
@@ -37,9 +48,8 @@ void CGame::Run()
         g_pFramework->Update();
         g_pFramework->Clear();
 
-		//TODO: display a form
 		CSprite ball;
-		ball.Load ("data/BlueBlock.bmp");
+		ball.Load (getDataPath("BlueBlock.bmp"));
 		ball.SetPos (15, 15);
 		ball.Render();
 
