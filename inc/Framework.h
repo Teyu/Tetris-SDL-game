@@ -1,9 +1,7 @@
 #ifndef FRAMEWORK_H
 #define FRAMEWORK_H
 
-#include <iostream>
-#include <sstream>
-#include "Timer.h"
+#include "SDL.h"
 #include "Singleton.h"
 
 using namespace std;
@@ -13,7 +11,7 @@ using namespace std;
 class CFramework : public TSingleton<CFramework>
 {
 public:
-    bool Init (int ScreenWidth, int ScreenHeight, int ColorDepth, bool bFullscreen);
+    bool Init (int screenWidth, int screenHeight, int colorDepth);
     void Quit();
     void Update();
     void Clear();
@@ -21,22 +19,22 @@ public:
     bool KeyDown (int Key_ID);
     SDL_Surface *GetScreen()
     {
-        return m_pScreen;
+        return m_screen;
     }
     int GetScreenWidth()
     {
-        return m_ScreenW;
+        return m_screenW;
     }
     int GetScreenHeight()
     {
-        return m_ScreenH;
+        return m_screenH;
     }
 
 private:
-    SDL_Surface *m_pScreen;
-    Uint8 *m_pKeystate;
-    int m_ScreenW;
-    int m_ScreenH;
+    SDL_Surface *m_screen;
+    Uint8 *m_keystate;
+    int m_screenW;
+    int m_screenH;
 };
 
-#endif
+#endif //FRAMEWORK_H

@@ -1,14 +1,15 @@
 #include "Framework.h"
+#include "Timer.h"
 
 /****************************************************************************************************************************************************
 initialise
 */
 
-bool CFramework::Init (int ScreenWidth, int ScreenHeight, int ColorDepth, bool bFullscreen)
+bool CFramework::Init (int screenWidth, int screenHeight, int colorDepth)
 {
     if (SDL_Init (SDL_INIT_VIDEO | SDL_INIT_TIMER) == -1)
     {
-        cout << "SDL could not be initialised" << endl;
+        cout << "SDL could not be initialized" << endl;
         cout << "Error: " << SDL_GetError() << endl;
 
         Quit();
@@ -16,16 +17,9 @@ bool CFramework::Init (int ScreenWidth, int ScreenHeight, int ColorDepth, bool b
         return false;
     }
 
-    if (bFullscreen == true)
-    {
-        m_pScreen = SDL_SetVideoMode (ScreenWidth, ScreenHeight, ColorDepth, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
-    }
-    else
-    {
-        m_pScreen = SDL_SetVideoMode (ScreenWidth, ScreenHeight, ColorDepth, SDL_HWSURFACE | SDL_DOUBLEBUF);
-    }
+    m_screen = SDL_SetVideoMode (screenWidth, screenHeight, colorDepth, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_FULLSCREEN);
 
-    if (m_pScreen == NULL)
+    if (m_screen == NULL)
     {
         cout << "video mode could not be set" << endl;
         cout << "Error: " << SDL_GetError() << endl;
@@ -37,10 +31,10 @@ bool CFramework::Init (int ScreenWidth, int ScreenHeight, int ColorDepth, bool b
 
     SDL_WM_SetCaption ("Sylwia", "Sylwia");
 
-    m_pKeystate = SDL_GetKeyState (NULL);
+    m_keystate = SDL_GetKeyState (NULL);
 
-    m_ScreenW = ScreenWidth;
-    m_ScreenH = ScreenHeight;
+    m_screenW = screenWidth;
+    m_screenH = screenHeight;
 
     return true;
 }
@@ -70,7 +64,7 @@ verify if a certain key is pressed
 
 bool CFramework::KeyDown (int Key_ID)
 {
-    return (m_pKeystate[Key_ID] ? true : false);
+    return (m_keystate[Key_ID] ? true : false);
 }
 
 /****************************************************************************************************************************************************
@@ -79,7 +73,7 @@ clear framework
 
 void CFramework::Clear()
 {
-    SDL_FillRect (m_pScreen, NULL, SDL_MapRGB (m_pScreen->format, 0, 0, 0));
+    SDL_FillRect (m_screen, NULL, SDL_MapRGB (m_screen->format, 0, 0, 0));
 }
 
 /****************************************************************************************************************************************************
@@ -88,5 +82,5 @@ display on screen
 
 void CFramework::Flip()
 {
-    SDL_Flip (m_pScreen);
+    SDL_Flip (m_screen);
 }

@@ -3,6 +3,7 @@
 #include "Sprite.h"
 
 #include "SylwiaConfig.h"
+#include <sstream>
 
 std::string getDataPath(const char * fileName)
 {

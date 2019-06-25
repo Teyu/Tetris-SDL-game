@@ -2,6 +2,7 @@
 #define SPRITE_H
 
 #include "Framework.h"
+#include <sstream>
 
 class CSprite
 {

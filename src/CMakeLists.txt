@@ -26,9 +26,9 @@ set_target_properties(Sylwia
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
-INSTALL (TARGETS Sylwia
-  DESTINATION bin
-)
+#INSTALL (TARGETS Sylwia
+#  DESTINATION bin
+#)
 
 if(SYLWIA_BUILD_TESTS)
   add_subdirectory(tests)

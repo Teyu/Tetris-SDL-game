@@ -3,6 +3,7 @@
 #include "Game.h"
 
 #include <SylwiaConfig.h>
+#include <iostream>
 
 #ifdef _WIN32
 #undef main
@@ -12,7 +13,7 @@ int main()
 {
     std::cout << "Sylwia Version " << SYLWIA_VERSION_MAJOR << "." << SYLWIA_VERSION_MINOR << std::endl;
 
-    if (g_pFramework->Init (500, 600, 16, false) == false)
+    if (g_pFramework->Init (500, 600, 16) == false)
     {
         return 1;
     }
